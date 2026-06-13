@@ -21,8 +21,11 @@ public class MarkerManagmentPanel extends CustomPanel implements UIBuildableAPI 
     public void buildUI() {
         clearChildren();
 
-        final MarkerGrid grid = new MarkerGrid(m_panel, MAIN_PANEL_W, (int) (MAIN_PANEL_H * 0.67f));
+        final MarkerGrid grid = new MarkerGrid(m_panel);
         grid.buildUI();
         add(grid).inBL(0f, 0f);
+
+        final MarkerFiltersPanel filter = new MarkerFiltersPanel(m_panel, grid);
+        add(filter).inTL(0f, 0f);
     }
 }

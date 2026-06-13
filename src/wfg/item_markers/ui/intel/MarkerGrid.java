@@ -1,24 +1,24 @@
 package wfg.item_markers.ui.intel;
 
+import static wfg.native_ui.util.Globals.settings;
 import static wfg.native_ui.util.UIConstants.*;
 
-import java.util.LinkedHashSet;
 import java.util.List;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.impl.codex.CodexIntelAdder;
+import com.fs.starfarer.api.campaign.econ.CommoditySpecAPI;
 import com.fs.starfarer.api.ui.UIPanelAPI;
 
-import rolflectionlib.util.RolfLectionUtil;
 import wfg.item_markers.item.ItemMarker;
+import wfg.item_markers.item.MarkerFilters;
+import wfg.item_markers.item.MarkerFilters.ActiveFilters;
+import wfg.item_markers.item.MarkerFilters.CommodityFilters;
 import wfg.native_ui.ui.table.GridTable;
 
 public class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
-    @SuppressWarnings("unchecked")
-    private final LinkedHashSet<String> entries = (LinkedHashSet<String>) RolfLectionUtil.getPrivateVariable("unlockedEntries", CodexIntelAdder.get());
 
-    public MarkerGrid(UIPanelAPI parent, int w, int h) {
-        super(parent, w, h, MarkerWidget.WIDTH, MarkerWidget.HEIGHT, opad);
+    public MarkerGrid(UIPanelAPI parent) {
+        super(parent, MarkerManagmentPanel.MAIN_PANEL_W, (int) (MarkerManagmentPanel.MAIN_PANEL_H * 0.67f), MarkerWidget.WIDTH, MarkerWidget.HEIGHT, opad);
 
         uniformOuterGap = true;
         justifyGrid = true;
@@ -39,13 +39,6 @@ public class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
     protected MarkerWidget createWidget(ItemMarker item, int index) {
         final MarkerWidget widget = new MarkerWidget(container, item);
 
-        // final int col = index % calculateColumns();
-        // widget.tooltip.positioner = (tp, exp) -> {
-        //     NativeUiUtils.anchorPanel(tp, widget.getPanel(), (col > 2 ?
-        //         AnchorType.LeftTop : AnchorType.RightTop), opad
-        //     );
-        // };
-
         return widget;
     }
 
@@ -56,12 +49,32 @@ public class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
     }
 
     protected String getEmptyMessage() {
-        return "No markers";
+        return "No matches";
     }
 
     
     private final boolean filterMarker(ItemMarker marker) {
-        if (entries.contains(marker.itemID)) return true;
+        if (MarkerFilters.activeFilter == ActiveFilters.ACTIVE_ONLY && !marker.isActive) return true;
+        if (MarkerFilters.activeFilter == ActiveFilters.INACTIVE_ONLY && marker.isActive) return true;
+        if (!MarkerFilters.typeFilter.contains(marker.type)) return true;
+
+        switch (marker.type) {
+        case COMMODITY:
+            final CommoditySpecAPI spec = settings.getCommoditySpec(marker.itemID);
+            if (spec.isNonEcon() && MarkerFilters.comFilters == CommodityFilters.ECONOMY) return true;
+            if (!spec.isNonEcon() && MarkerFilters.comFilters == CommodityFilters.NON_ECONOMY) return true;
+            break;
+    
+            default: break;
+        }
+
+        final String query = MarkerFilters.searchQuery.trim().toLowerCase();
+        if (!query.isEmpty()) {
+            final String name = marker.name.toLowerCase();
+            final String id = marker.itemID.toLowerCase();
+            if (!name.contains(query) && !id.contains(query)) return true;
+        }
+        if (marker.getCodexId() == null || marker.getCodexId().isEmpty()) return true;
 
         return false;
     }
@@ -70,10 +83,8 @@ public class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
         if (a.isActive != b.isActive) return a.isActive ? -1 : 1;
         
         final int typeCmp = Integer.compare(a.type.ordinal(), b.type.ordinal());
-        if (typeCmp != 0) {
-            return typeCmp;
-        }
+        if (typeCmp != 0) return typeCmp;
         
-        return a.itemID.compareTo(b.itemID);
+        return a.name.compareTo(b.name);
     }
 }
