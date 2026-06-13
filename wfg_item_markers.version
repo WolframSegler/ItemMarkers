@@ -1,0 +1,13 @@
+{
+	"masterVersionFile":"https://raw.githubusercontent.com/WolframSegler/ItemMarkers/main/wfg_item_markers.version",
+	"modName":"Item Markers",
+	"modThreadId":-1,
+	"modVersion": {
+		"major":0,
+		"minor":1,
+		"patch":0
+	},
+	"starsectorVersion":"0.98a-RC8",
+	"directDownloadURL":"https://github.com/WolframSegler/ItemMarkers/releases/latest/download/ItemMarkers.zip",
+	"changelogURL":"https://raw.githubusercontent.com/WolframSegler/ItemMarkers/main/changelog.txt"
+}

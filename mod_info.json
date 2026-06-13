@@ -1,0 +1,20 @@
+{
+	"id":"wfg_item_markers",
+	"name":"Item Markers",
+	"author":"WolframSegler",
+	"version": "0.1.0",
+	"description":"Adds markers to items in a market.",
+	"gameVersion":"0.98a-RC8",
+	"utility": false,
+	"jars": [
+        "jars/main/item_markers.jar"
+    ],
+	"modPlugin": "wfg.item_markers.plugins.ItemMarkersModPlugin",
+	"dependencies": [
+        {
+            "id": "wfg_native_ui",
+            "name": "WrapUI",
+			"version": "0.4.2"
+        }
+    ]
+}
