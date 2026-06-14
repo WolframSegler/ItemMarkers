@@ -17,6 +17,7 @@ import com.fs.starfarer.campaign.ui.trade.CargoDataGridView;
 import com.fs.starfarer.campaign.ui.trade.CargoStackView;
 
 import rolflectionlib.util.RolfLectionUtil;
+import wfg.item_markers.config.VisualConfig;
 import wfg.item_markers.item.ItemMarker;
 import wfg.item_markers.serializable.ItemMarkersMap;
 import wfg.item_markers.ui.Sprites;
@@ -54,7 +55,14 @@ public class CargoTabUIBuilder implements CoreTabUIBuilder {
 
                 if (!activeMarkers.containsKey(getStackId(view.getStack()))) continue;
                 final Base icon = new Base(view, 20, 20, Sprites.MARKER, null, null);
-                view.addComponent(icon.getPanel()).inTL(pad, pad);
+                
+                switch (VisualConfig.CARGO_MARKER_POSITION) {
+                    default -> view.addComponent(icon.getPanel()).inTL(pad, pad);
+                    case TL -> view.addComponent(icon.getPanel()).inTL(pad, pad);
+                    case TR -> view.addComponent(icon.getPanel()).inTR(pad, pad);
+                    case BL -> view.addComponent(icon.getPanel()).inBL(pad, pad);
+                    case BR -> view.addComponent(icon.getPanel()).inBR(pad, pad);
+                }
             }
         }
 
