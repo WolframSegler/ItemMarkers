@@ -17,6 +17,14 @@ public class UIInjectorListener implements CoreUITabListener {
         case INTEL:
             sector.addTransientScript(new IntelTabUIBuilder());
             break;
+
+        case FLEET:
+            sector.addTransientScript(new FleetTabUIBuilder());
+            break;
+
+        case CARGO:
+            sector.addTransientScript(new CargoTabUIBuilder());
+            break;
     
         default: break;
         }

@@ -37,7 +37,7 @@ public class MarkerWidget extends UIClickable<MarkerWidget> implements WidgetAPI
     private static final Color WIDGET_BG_SELECTED = new Color(46, 125, 50);
 
     public static final int WIDTH = 100;
-    public static final int HEIGHT = 150;
+    public static final int HEIGHT = 140;
 
     private final AudioFeedbackComp audio = comp().get(NativeComponents.AUDIO_FEEDBACK);
     private final HoverGlowComp glow = comp().get(NativeComponents.HOVER_GLOW);
