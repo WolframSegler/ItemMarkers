@@ -31,6 +31,27 @@ public class FleetTabUIBuilder implements CoreTabUIBuilder {
 
         final UIPanelAPI masterTab = Attachments.getCurrentTab();
         if (masterTab == null) return;
+
+        final UIPanelAPI marketPicker = (UIPanelAPI) RolfLectionUtil.getMethodAndInvokeDirectly("getMarketPicker", masterTab);
+        if (marketPicker == null) return;
+        final HashMap<String, ItemMarker> activeMarkers = ItemMarkersMap.instance().activeMarkers;
+
+        final List<ButtonAPI> submarketButtons = (List<ButtonAPI>) RolfLectionUtil.getAllVariables(marketPicker).stream()
+            .filter(f -> f instanceof List).findFirst().orElse(null);
+
+        for (ButtonAPI btn : submarketButtons) {
+            final SubmarketAPI submarket = ((SubmarketAPI)btn.getCustomData());
+
+            submarket.getCargo().initMothballedShips(submarket.getFaction().getId());
+            for (FleetMemberAPI member : submarket.getCargo().getMothballedShips().getMembersListCopy()) {
+                if (activeMarkers.containsKey(member.getHullSpec().getBaseHullId())) {
+                    final Base icon = new Base(marketPicker, 20, 20, Sprites.MARKER, null, null);
+                    marketPicker.addComponent(icon.getPanel()).rightOfTop(btn, -16);
+                    break;
+                }
+            }
+        }
+
         final SubmarketAPI submarket = (SubmarketAPI) RolfLectionUtil.getAllVariables(masterTab).stream()
             .filter(f -> f instanceof SubmarketAPI).findFirst().orElse(null);
         if (submarket == null) return;
@@ -52,7 +73,6 @@ public class FleetTabUIBuilder implements CoreTabUIBuilder {
         final UIPanelAPI fleetList = (UIPanelAPI) RolfLectionUtil.getMethodAndInvokeDirectly("getList", fleetPanel);
         final List<UIComponentAPI> widgets = (List<UIComponentAPI>) RolfLectionUtil.getMethodAndInvokeDirectly("getItems", fleetList);
 
-        final HashMap<String, ItemMarker> activeMarkers = ItemMarkersMap.instance().activeMarkers;
         for (UIComponentAPI widgetObj : widgets) {
             final UIPanelAPI widget = (UIPanelAPI) widgetObj;
 
@@ -63,7 +83,7 @@ public class FleetTabUIBuilder implements CoreTabUIBuilder {
 
             if (!activeMarkers.containsKey(member.getHullSpec().getBaseHullId())) continue;
             final Base icon = new Base(widget, 20, 20, Sprites.MARKER, null, null);
-            widget.addComponent(icon.getPanel()).inTR(pad, pad);
+            widget.addComponent(icon.getPanel()).inBL(pad, 70);
         }
     }
 }
