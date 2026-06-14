@@ -2,6 +2,7 @@ package wfg.item_markers.ui.script;
 
 import static wfg.native_ui.util.UIConstants.pad;
 
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import com.fs.starfarer.api.ui.UIPanelAPI;
 import com.fs.starfarer.campaign.fleet.FleetMember;
 
 import rolflectionlib.util.RolfLectionUtil;
+import wfg.item_markers.config.VisualConfig;
 import wfg.item_markers.item.ItemMarker;
 import wfg.item_markers.serializable.ItemMarkersMap;
 import wfg.item_markers.ui.Sprites;
@@ -84,6 +86,12 @@ public class FleetTabUIBuilder implements CoreTabUIBuilder {
             if (!activeMarkers.containsKey(member.getHullSpec().getBaseHullId())) continue;
             final Base icon = new Base(widget, 20, 20, Sprites.MARKER, null, null);
             widget.addComponent(icon.getPanel()).inBL(pad, 70);
+
+            if (VisualConfig.HIGHLIGHT_FRAME_ALPHA > 0f) {
+                final Base hue = new Base(widget, (int) widget.getPosition().getWidth(), (int) widget.getPosition().getHeight(), Sprites.HUE_FRAME, null, null);
+                widget.addComponent(hue.getPanel()).inBL(0f, 0f);
+                hue.texColor = new Color(1f, 1f, 1f, VisualConfig.HIGHLIGHT_FRAME_ALPHA);
+            }
         }
     }
 }

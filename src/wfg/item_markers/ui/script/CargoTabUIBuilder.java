@@ -2,6 +2,7 @@ package wfg.item_markers.ui.script;
 
 import static wfg.native_ui.util.UIConstants.*;
 
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.List;
 
@@ -62,6 +63,12 @@ public class CargoTabUIBuilder implements CoreTabUIBuilder {
                     case TR -> view.addComponent(icon.getPanel()).inTR(pad, pad);
                     case BL -> view.addComponent(icon.getPanel()).inBL(pad, pad);
                     case BR -> view.addComponent(icon.getPanel()).inBR(pad, pad);
+                }
+
+                if (VisualConfig.HIGHLIGHT_FRAME_ALPHA > 0f) {
+                    final Base hue = new Base(view, (int) view.getWidth(), (int) view.getHeight(), Sprites.HUE_FRAME, null, null);
+                    view.addComponent(hue.getPanel()).inBL(0f, 0f);
+                    hue.texColor = new Color(1f, 1f, 1f, VisualConfig.HIGHLIGHT_FRAME_ALPHA);
                 }
             }
         }

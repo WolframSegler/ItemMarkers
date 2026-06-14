@@ -9,7 +9,7 @@
 	"jars": [
         "jars/main/item_markers.jar"
     ],
-	"modPlugin": "wfg.item_markers.plugins.ItemMarkersModPlugin",
+	"modPlugin": "wfg.item_markers.plugin.ItemMarkersModPlugin",
 	"dependencies": [
         {
             "id": "wfg_native_ui",

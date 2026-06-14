@@ -36,6 +36,7 @@ public class VisualConfigLoader {
 
         try {
             VisualConfig.CARGO_MARKER_POSITION = Alignment.valueOf(root.getString("CARGO_MARKER_POSITION"));
+            VisualConfig.HIGHLIGHT_FRAME_ALPHA = (float) root.optDouble("HIGHLIGHT_FRAME_ALPHA", 1d);
 
             if (settings.getModManager().isModEnabled(LUNA_LIB)) {
                 loadFromLunaSettings();
@@ -48,5 +49,6 @@ public class VisualConfigLoader {
 
     public static final void loadFromLunaSettings() {
         VisualConfig.CARGO_MARKER_POSITION = Alignment.valueOf(LunaSettings.getString(ITEM_MARKERS, "CARGO_MARKER_POSITION"));
+        VisualConfig.HIGHLIGHT_FRAME_ALPHA = LunaSettings.getFloat(ITEM_MARKERS, "HIGHLIGHT_FRAME_ALPHA");
     }
 }

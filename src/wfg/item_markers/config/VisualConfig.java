@@ -12,4 +12,5 @@ public class VisualConfig {
     }
 
     public static Alignment CARGO_MARKER_POSITION;
+    public static float HIGHLIGHT_FRAME_ALPHA;
 }

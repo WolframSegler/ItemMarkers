@@ -1,5 +1,7 @@
 {
     "graphics": {
-        
+        "ui": {
+            "hue_frame": "graphics/ui/hue_frame.png"
+        }
     }
 }

@@ -11,7 +11,3 @@ Content details related to the mod can be found on [the fractalsoftworks forums]
 ## Credits
 
 rolfosian - for providing the [reflection library](https://github.com/rolfosian/RolflectionLib-SS).
-
-<br>
-
-## Attributes

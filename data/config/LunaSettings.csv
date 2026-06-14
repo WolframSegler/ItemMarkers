@@ -1,2 +1,3 @@
 fieldID,fieldName,fieldType,defaultValue,secondaryValue,fieldDescription,minValue,maxValue,tab
 CARGO_MARKER_POSITION,Commodity Marker Position,Radio,TL,"TL, TR, BL, BR",Determines the marker position for items inside the cargo screen.,,,VISUAL
+HIGHLIGHT_FRAME_ALPHA,Highlight Frame Opacity,Double,0.7,,Determines how pronounced the frame around marked items are.,0.0,1.0,VISUAL
