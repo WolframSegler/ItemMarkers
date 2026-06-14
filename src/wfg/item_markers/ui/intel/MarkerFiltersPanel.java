@@ -4,7 +4,13 @@ import static wfg.native_ui.util.Globals.settings;
 import static wfg.native_ui.util.UIConstants.*;
 
 import java.awt.Color;
+import java.util.Arrays;
+import java.util.List;
 
+import com.fs.starfarer.api.combat.DamageType;
+import com.fs.starfarer.api.combat.ShipAPI.HullSize;
+import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
+import com.fs.starfarer.api.loading.WingRole;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TextFieldAPI;
@@ -19,6 +25,7 @@ import wfg.item_markers.item.MarkerFilters.CommodityFilters;
 import wfg.native_ui.ui.ComponentFactory;
 import wfg.native_ui.ui.core.UIBuildableAPI;
 import wfg.native_ui.ui.functional.Button;
+import wfg.native_ui.ui.functional.Button.CutStyle;
 import wfg.native_ui.ui.panel.CustomPanel;
 import wfg.native_ui.ui.widget.MultiSelect;
 import wfg.native_ui.ui.widget.RadioPanel;
@@ -62,7 +69,7 @@ public class MarkerFiltersPanel extends CustomPanel {
             btn.setHighlightBrightness(0f);
             btn.bgColor = nearBlack;
         }
-        add(activeFilterButtons).rightOfMid(uiBuilder, opad);
+        add(activeFilterButtons).rightOfBottom(uiBuilder, opad);
 
         final LabelAPI typeLbl = settings.createLabel("Type", Fonts.ORBITRON_16);
         add(typeLbl).belowLeft(uiBuilder, opad);
@@ -71,8 +78,8 @@ public class MarkerFiltersPanel extends CustomPanel {
         typeFilterButtons.onSelected = (multi) -> {
 
             MarkerFilters.typeFilter.clear();
-            for (int idx : multi.getSelectedIndexes()) {
-                MarkerFilters.typeFilter.add(MarkerType.ALL_MARKERS[idx]);
+            for (int index : multi.getSelectedIndexes()) {
+                MarkerFilters.typeFilter.add(MarkerType.ALL_MARKERS[index]);
             }
             target.buildUI();
         };
@@ -105,6 +112,136 @@ public class MarkerFiltersPanel extends CustomPanel {
             btn.bgColor = nearBlack;
         }
         add(comFilterButtons).rightOfMid((UIComponentAPI) commodityLbl, hpad);
+
+        final LabelAPI shipLbl = settings.createLabel("Ship & Fighter", Fonts.ORBITRON_16);
+        add(shipLbl).belowLeft((UIComponentAPI) commodityLbl, opad);
+
+        final List<String> hullSizeStrings = Arrays.asList("Frigate", "Destroyer", "Cruiser", "Capital");
+        final MultiSelect hullSizeFilterButtons = new MultiSelect(m_panel, btnW*4 + opad*2, btnH, hullSizeStrings, LayoutMode.HORIZONTAL);
+        hullSizeFilterButtons.onSelected = (multi) -> {
+
+            MarkerFilters.hullSizeFilters.clear();
+            for (int index : multi.getSelectedIndexes()) {
+                MarkerFilters.hullSizeFilters.add(HullSize.values()[index + 2]);
+            }
+            target.buildUI();
+        };
+        hullSizeFilterButtons.buildUI();
+
+        for (Button btn : hullSizeFilterButtons.getButtons()) {
+            final int index = (Integer) btn.customData;
+            final boolean contains = MarkerFilters.hullSizeFilters.contains(HullSize.values()[index + 2]);
+
+            if (contains) hullSizeFilterButtons.select(index);
+            btn.setHighlightBrightness(0f);
+            btn.bgColor = nearBlack;
+        }
+        add(hullSizeFilterButtons).rightOfMid((UIComponentAPI) shipLbl, hpad);
+
+        final List<String> wingRoles = Arrays.asList("Bomber", "Fighter", "Interceptor", "Assault", "Support");
+        final MultiSelect wingRoleButtons = new MultiSelect(m_panel, btnW*5 + opad*2, btnH, wingRoles, LayoutMode.HORIZONTAL);
+        wingRoleButtons.onSelected = (multi) -> {
+
+            MarkerFilters.wingRoleFilters.clear();
+            for (Integer index : multi.getSelectedIndexes()) {
+                MarkerFilters.wingRoleFilters.add(WingRole.values()[index]);
+            }
+            target.buildUI();
+        };
+        wingRoleButtons.buildUI();
+
+        for (Button btn : wingRoleButtons.getButtons()) {
+            final int index = (Integer) btn.customData;
+            final boolean contains = MarkerFilters.wingRoleFilters.contains(WingRole.values()[index]);
+
+            if (contains) wingRoleButtons.select(index);
+            btn.setHighlightBrightness(0f);
+            btn.bgColor = nearBlack;
+        }
+        add(wingRoleButtons).rightOfMid(hullSizeFilterButtons.getPanel(), opad*2);
+
+        final MultiSelect manufacturerFilterButtons = new MultiSelect(m_panel, btnW*5 + opad*2, btnH, MarkerFilters.manufacturers, LayoutMode.HORIZONTAL);
+        manufacturerFilterButtons.onSelected = (multi) -> {
+
+            MarkerFilters.manufacturerFilters.clear();
+            for (String key : multi.getSelectedStrings()) {
+                MarkerFilters.manufacturerFilters.add(key);
+            }
+            target.buildUI();
+        };
+        manufacturerFilterButtons.buildUI();
+
+        for (Button btn : manufacturerFilterButtons.getButtons()) {
+            final int index = (Integer) btn.customData;
+            final boolean contains = MarkerFilters.manufacturerFilters.contains(MarkerFilters.manufacturers.get(index));
+
+            if (contains) manufacturerFilterButtons.select(index);
+            btn.setHighlightBrightness(0f);
+            btn.bgColor = nearBlack;
+        }
+        add(manufacturerFilterButtons).belowLeft(hullSizeFilterButtons.getPanel(), hpad);
+
+        final Button allManufacturersBtn = new Button(m_panel, btnW, btnH, "All", Fonts.DEFAULT_SMALL, (btn) -> {
+            btn.setChecked(!btn.isChecked());
+            MarkerFilters.allManufacturers = btn.isChecked();
+            target.buildUI();
+        });
+        allManufacturersBtn.cutStyle = CutStyle.ALL;
+        allManufacturersBtn.setHighlightBrightness(0f);
+        allManufacturersBtn.bgColor = nearBlack;
+        allManufacturersBtn.setChecked(MarkerFilters.allManufacturers);
+        add(allManufacturersBtn).rightOfMid(manufacturerFilterButtons.getPanel(), hpad);
+
+        final LabelAPI weaponLbl = settings.createLabel("Weapon", Fonts.ORBITRON_16);
+        add(weaponLbl).belowLeft((UIComponentAPI) shipLbl, opad*2 + btnH);
+
+        final List<String> weaponSizeStrings = Arrays.asList(WeaponSize.SMALL.getDisplayName(), WeaponSize.MEDIUM.getDisplayName(), WeaponSize.LARGE.getDisplayName());
+        final MultiSelect weaponSizeButtons = new MultiSelect(m_panel, btnW*3 + opad*2, btnH, weaponSizeStrings, LayoutMode.HORIZONTAL);
+        weaponSizeButtons.onSelected = (multi) -> {
+
+            MarkerFilters.weaponSizeFilters.clear();
+            for (int index : multi.getSelectedIndexes()) {
+                MarkerFilters.weaponSizeFilters.add(WeaponSize.values()[index]);
+            }
+            target.buildUI();
+        };
+        weaponSizeButtons.buildUI();
+
+        for (Button btn : weaponSizeButtons.getButtons()) {
+            final int index = (Integer) btn.customData;
+            final boolean contains = MarkerFilters.weaponSizeFilters.contains(WeaponSize.values()[index]);
+
+            if (contains) weaponSizeButtons.select(index);
+            btn.setHighlightBrightness(0f);
+            btn.bgColor = nearBlack;
+        }
+        add(weaponSizeButtons).rightOfMid((UIComponentAPI) weaponLbl, hpad);
+
+        final List<String> damageTypeStrings = Arrays.asList(
+            DamageType.KINETIC.getDisplayName(), DamageType.HIGH_EXPLOSIVE.getDisplayName(),
+            DamageType.FRAGMENTATION.getDisplayName(), DamageType.ENERGY.getDisplayName(),
+            DamageType.OTHER.getDisplayName()
+        );
+        final MultiSelect damageTypeButtons = new MultiSelect(m_panel, btnW*5 + opad*4, btnH, damageTypeStrings, LayoutMode.HORIZONTAL);
+        damageTypeButtons.onSelected = (multi) -> {
+
+            MarkerFilters.weaponDamageFilters.clear();
+            for (int index : multi.getSelectedIndexes()) {
+                MarkerFilters.weaponDamageFilters.add(DamageType.values()[index]);
+            }
+            target.buildUI();
+        };
+        damageTypeButtons.buildUI();
+
+        for (Button btn : damageTypeButtons.getButtons()) {
+            final int index = (Integer) btn.customData;
+            final boolean contains = MarkerFilters.weaponDamageFilters.contains(DamageType.values()[index]);
+
+            if (contains) damageTypeButtons.select(index);
+            btn.setHighlightBrightness(0f);
+            btn.bgColor = nearBlack;
+        }
+        add(damageTypeButtons).belowLeft(weaponSizeButtons.getPanel(), hpad);
     }
 
     @Override

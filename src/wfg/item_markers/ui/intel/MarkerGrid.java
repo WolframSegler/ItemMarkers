@@ -1,5 +1,4 @@
 package wfg.item_markers.ui.intel;
-
 import static wfg.native_ui.util.Globals.settings;
 import static wfg.native_ui.util.UIConstants.*;
 
@@ -7,12 +6,18 @@ import java.util.List;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.econ.CommoditySpecAPI;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI;
+import com.fs.starfarer.api.loading.FighterWingSpecAPI;
+import com.fs.starfarer.api.loading.WeaponSpecAPI;
+import com.fs.starfarer.api.ui.Fonts;
+import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.UIPanelAPI;
 
 import wfg.item_markers.item.ItemMarker;
 import wfg.item_markers.item.MarkerFilters;
 import wfg.item_markers.item.MarkerFilters.ActiveFilters;
 import wfg.item_markers.item.MarkerFilters.CommodityFilters;
+import wfg.item_markers.serializable.ItemMarkersMap;
 import wfg.native_ui.ui.table.GridTable;
 
 public class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
@@ -25,6 +30,15 @@ public class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
         isSelectionEnabled = true;
         
         buildUI();
+    }
+
+    @Override
+    public void buildUI() {
+        super.buildUI();
+        
+        final LabelAPI countLbl = settings.createLabel(getDataList().size() + " entries", Fonts.DEFAULT_SMALL);
+        countLbl.setColor(gray);
+        add(countLbl).inTL(opad, -pad);
     }
 
     protected final List<ItemMarker> getDataList() {
@@ -43,7 +57,7 @@ public class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
     }
 
     protected void onWidgetClicked(MarkerWidget source) {
-        source.data.isActive = !source.data.isActive;
+        ItemMarkersMap.instance().toggleMarker(source.data);
         source.buildUI();
         Global.getSoundPlayer().playUISound("ui_button_pressed", 1f, 1f);
     }
@@ -52,20 +66,41 @@ public class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
         return "No matches";
     }
 
-    
     private final boolean filterMarker(ItemMarker marker) {
         if (MarkerFilters.activeFilter == ActiveFilters.ACTIVE_ONLY && !marker.isActive) return true;
         if (MarkerFilters.activeFilter == ActiveFilters.INACTIVE_ONLY && marker.isActive) return true;
         if (!MarkerFilters.typeFilter.contains(marker.type)) return true;
 
         switch (marker.type) {
-        case COMMODITY:
-            final CommoditySpecAPI spec = settings.getCommoditySpec(marker.itemID);
+        case COMMODITY: {
+            final CommoditySpecAPI spec = (CommoditySpecAPI) marker.spec;
             if (spec.isNonEcon() && MarkerFilters.comFilters == CommodityFilters.ECONOMY) return true;
             if (!spec.isNonEcon() && MarkerFilters.comFilters == CommodityFilters.NON_ECONOMY) return true;
             break;
-    
-            default: break;
+        }
+
+        case SHIP: {
+            final ShipHullSpecAPI spec = (ShipHullSpecAPI) marker.spec;
+            if (!MarkerFilters.hullSizeFilters.contains(spec.getHullSize())) return true;
+            if (!MarkerFilters.allManufacturers && !MarkerFilters.manufacturerFilters.contains(spec.getManufacturer())) return true;
+            break;
+        }
+
+        case FIGHTER: {
+            final FighterWingSpecAPI spec = (FighterWingSpecAPI) marker.spec;
+            if (!MarkerFilters.allManufacturers && !MarkerFilters.manufacturerFilters.contains(spec.getVariant().getHullSpec().getManufacturer())) return true;
+            if (!MarkerFilters.wingRoleFilters.contains(spec.getRole())) return true;
+            break;
+        }
+
+        case WEAPON: {
+            final WeaponSpecAPI spec = (WeaponSpecAPI) marker.spec;
+            if (!MarkerFilters.weaponSizeFilters.contains(spec.getSize())) return true;
+            if (!MarkerFilters.weaponDamageFilters.contains(spec.getDamageType())) return true;
+            break;
+        }
+
+        default: break;
         }
 
         final String query = MarkerFilters.searchQuery.trim().toLowerCase();
