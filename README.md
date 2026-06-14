@@ -1,6 +1,6 @@
 # Item Markers
 
-Starsector mod that adds markers to items in a market. 
+Starsector mod that lets you add markers to wanted items or ships too see them at a glance.
 
 [![Download](https://img.shields.io/badge/Download-Latest%20Release-brightgreen)](https://github.com/WolframSegler/ItemMarkers/releases/latest/download/ItemMarkers.zip)
 

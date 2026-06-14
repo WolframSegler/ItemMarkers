@@ -3,7 +3,7 @@
 	"name":"Item Markers",
 	"author":"WolframSegler",
 	"version": "0.1.0",
-	"description":"Adds markers to items in a market.",
+	"description":"Add markers to wanted items or ships too see them at a glance.",
 	"gameVersion":"0.98a-RC8",
 	"utility": false,
 	"jars": [
