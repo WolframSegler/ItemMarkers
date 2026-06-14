@@ -5,7 +5,6 @@ import static wfg.native_ui.util.UIConstants.*;
 import java.util.List;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.econ.CommoditySpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.loading.FighterWingSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
@@ -16,7 +15,6 @@ import com.fs.starfarer.api.ui.UIPanelAPI;
 import wfg.item_markers.item.ItemMarker;
 import wfg.item_markers.item.MarkerFilters;
 import wfg.item_markers.item.MarkerFilters.ActiveFilters;
-import wfg.item_markers.item.MarkerFilters.CommodityFilters;
 import wfg.item_markers.serializable.ItemMarkersMap;
 import wfg.native_ui.ui.table.GridTable;
 
@@ -72,13 +70,6 @@ public class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
         if (!MarkerFilters.typeFilter.contains(marker.type)) return true;
 
         switch (marker.type) {
-        case COMMODITY: {
-            final CommoditySpecAPI spec = (CommoditySpecAPI) marker.spec;
-            if (spec.isNonEcon() && MarkerFilters.comFilters == CommodityFilters.ECONOMY) return true;
-            if (!spec.isNonEcon() && MarkerFilters.comFilters == CommodityFilters.NON_ECONOMY) return true;
-            break;
-        }
-
         case SHIP: {
             final ShipHullSpecAPI spec = (ShipHullSpecAPI) marker.spec;
             if (!MarkerFilters.hullSizeFilters.contains(spec.getHullSize())) return true;

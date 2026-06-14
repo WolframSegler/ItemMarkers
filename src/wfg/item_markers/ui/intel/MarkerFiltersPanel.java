@@ -7,9 +7,12 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
+
 import com.fs.starfarer.api.combat.DamageType;
 import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
+import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.loading.WingRole;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
@@ -21,7 +24,6 @@ import com.fs.starfarer.api.ui.UIPanelAPI;
 import wfg.item_markers.item.MarkerFilters;
 import wfg.item_markers.item.MarkerType;
 import wfg.item_markers.item.MarkerFilters.ActiveFilters;
-import wfg.item_markers.item.MarkerFilters.CommodityFilters;
 import wfg.native_ui.ui.ComponentFactory;
 import wfg.native_ui.ui.core.UIBuildableAPI;
 import wfg.native_ui.ui.functional.Button;
@@ -30,13 +32,14 @@ import wfg.native_ui.ui.panel.CustomPanel;
 import wfg.native_ui.ui.widget.MultiSelect;
 import wfg.native_ui.ui.widget.RadioPanel;
 import wfg.native_ui.ui.widget.RadioPanel.LayoutMode;
+import wfg.native_ui.util.NativeUiUtils;
 
 public class MarkerFiltersPanel extends CustomPanel {
     private static final int nameFieldW = 192;
     private static final int btnH = 24;
     private static final int btnW = 100;
     private static final Color nearBlack = new Color(20, 20, 25);
-    private static final String emptyNameFieldTxt = "Search...";
+    private static final String emptyNameFieldTxt = "Ctrl-F to search";
 
     private final UIBuildableAPI target;
     private final TextFieldAPI nameField;
@@ -95,26 +98,8 @@ public class MarkerFiltersPanel extends CustomPanel {
         }
         add(typeFilterButtons).rightOfMid((UIComponentAPI) typeLbl, hpad);
 
-        final LabelAPI commodityLbl = settings.createLabel("Commodity", Fonts.ORBITRON_16);
-        add(commodityLbl).belowLeft((UIComponentAPI) typeLbl, opad);
-
-        final RadioPanel comFilterButtons = new RadioPanel(m_panel, btnW*3 + opad*2, btnH, LayoutMode.HORIZONTAL)
-            .addOption("All", MarkerFilters.comFilters == CommodityFilters.ALL)
-            .addOption("Economic", MarkerFilters.comFilters == CommodityFilters.ECONOMY)
-            .addOption("Non Economic", MarkerFilters.comFilters == CommodityFilters.NON_ECONOMY);
-        comFilterButtons.optionSelected = (code) -> {
-            MarkerFilters.comFilters = CommodityFilters.values()[code];
-            target.buildUI();
-        };
-        comFilterButtons.buildUI();
-        for (Button btn : comFilterButtons.getButtons()) {
-            btn.setHighlightBrightness(0f);
-            btn.bgColor = nearBlack;
-        }
-        add(comFilterButtons).rightOfMid((UIComponentAPI) commodityLbl, hpad);
-
         final LabelAPI shipLbl = settings.createLabel("Ship & Fighter", Fonts.ORBITRON_16);
-        add(shipLbl).belowLeft((UIComponentAPI) commodityLbl, opad);
+        add(shipLbl).belowLeft((UIComponentAPI) typeLbl, opad);
 
         final List<String> hullSizeStrings = Arrays.asList("Frigate", "Destroyer", "Cruiser", "Capital");
         final MultiSelect hullSizeFilterButtons = new MultiSelect(m_panel, btnW*4 + opad*2, btnH, hullSizeStrings, LayoutMode.HORIZONTAL);
@@ -260,9 +245,21 @@ public class MarkerFiltersPanel extends CustomPanel {
                 nameField.setColor(base);
             }
         } else {
+            nameField.setColor(gray);
             if (nameField.getText().isEmpty()) {
                 nameField.setText(emptyNameFieldTxt);
-                nameField.setColor(gray);
+            }
+        }
+    }
+
+    @Override
+    public void processInput(List<InputEventAPI> events) {
+        super.processInput(events);
+
+        for (InputEventAPI event : events) {
+            if (event.isConsumed()) continue;
+            if (event.isKeyDownEvent() && event.getEventValue() == Keyboard.KEY_F) {
+                if (NativeUiUtils.isCtrlDown()) nameField.grabFocus(true);
             }
         }
     }

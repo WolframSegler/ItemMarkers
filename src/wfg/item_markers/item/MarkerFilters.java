@@ -13,7 +13,7 @@ import com.fs.starfarer.api.loading.WingRole;
 public class MarkerFilters {
     public static final List<String> manufacturers = Arrays.asList("Low Tech", "Midline", "High Tech", "Pirate", "Luddic Path");
 
-    public static final EnumSet<MarkerType> typeFilter = EnumSet.allOf(MarkerType.class);
+    public static final EnumSet<MarkerType> typeFilter = EnumSet.of(MarkerType.COMMODITY, MarkerType.SHIP, MarkerType.WEAPON, MarkerType.FIGHTER);
     public static final EnumSet<HullSize> hullSizeFilters = EnumSet.allOf(HullSize.class);
     public static final EnumSet<WingRole> wingRoleFilters = EnumSet.allOf(WingRole.class);
     public static final EnumSet<WeaponSize> weaponSizeFilters = EnumSet.allOf(WeaponSize.class);
@@ -21,7 +21,6 @@ public class MarkerFilters {
     public static final HashSet<String> manufacturerFilters = new HashSet<>(manufacturers);
     
     public static ActiveFilters activeFilter = ActiveFilters.ALL;
-    public static CommodityFilters comFilters = CommodityFilters.ALL;
 
     public static boolean allManufacturers = true;
 
