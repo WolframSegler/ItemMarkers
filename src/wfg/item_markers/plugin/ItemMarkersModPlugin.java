@@ -1,4 +1,4 @@
-package wfg.item_markers.plugins;
+package wfg.item_markers.plugin;
 
 import static wfg.item_markers.constant.Mods.LUNA_LIB;
 import static wfg.native_ui.util.Globals.settings;
