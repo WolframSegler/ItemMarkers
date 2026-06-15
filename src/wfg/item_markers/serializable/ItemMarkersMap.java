@@ -5,20 +5,20 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.SectorAPI;
 
 import wfg.item_markers.item.ItemMarker;
 
 public class ItemMarkersMap implements Serializable {
-    private static final String ItemMarkersSerialID = "item_markers_save_data_id"; 
+    private ItemMarkersMap() {}
+    private static final String ItemMarkersSerialID = "item_markers_save_data_id";
     private static ItemMarkersMap instance;
 
-    public final HashSet<String> activeMarkerIds = new HashSet<>(32);
+    public HashSet<String> activeMarkerIds = new HashSet<>(32);
     public transient HashMap<String, ItemMarker> activeMarkers = new HashMap<>(activeMarkerIds.size());
 
     public final void toggleMarker(ItemMarker marker) {
         if (marker.isActive) deactivateMarker(marker);
-        else activateMarker(marker); 
+        else activateMarker(marker);
     }
 
     public final void activateMarker(ItemMarker marker) {
@@ -33,13 +33,7 @@ public class ItemMarkersMap implements Serializable {
         activeMarkers.remove(marker.itemID);
     }
 
-    private ItemMarkersMap() {
-        instance = this;
-
-        readResolve();
-    }
-
-    private final Object readResolve() {
+    private final void rebuildMarkers() {
         activeMarkers = new HashMap<>(activeMarkerIds.size());
         for (ItemMarker marker : ItemMarker.getAllMarkers()) {
             if (activeMarkerIds.contains(marker.itemID)) {
@@ -50,29 +44,30 @@ public class ItemMarkersMap implements Serializable {
                 activeMarkers.remove(marker.itemID);
             }
         }
-
-        return this;
     }
 
     public static final ItemMarkersMap loadInstance() {
-        final SectorAPI sector = Global.getSector();
+        if (instance != null) return instance;
 
-        ItemMarkersMap data = (ItemMarkersMap) sector.getPersistentData().get(ItemMarkersSerialID);
+        @SuppressWarnings("unchecked")
+        final HashSet<String> loadedIds = (HashSet<String>) Global.getSector().getPersistentData().get(ItemMarkersSerialID);
 
-        if (data == null) data = new ItemMarkersMap();
+        ItemMarkersMap data = new ItemMarkersMap();
+        data.activeMarkerIds = loadedIds != null ? loadedIds : new HashSet<>(32);
+        data.rebuildMarkers();
+
         instance = data;
-
         return data;
     }
 
     public static final void saveInstance() {
-        Global.getSector().getPersistentData().put(ItemMarkersSerialID, instance);
-
+        if (instance == null) return;
+        Global.getSector().getPersistentData().put(ItemMarkersSerialID, instance.activeMarkerIds);
         instance = null;
     }
 
     public static final ItemMarkersMap instance() {
-        if (instance == null) ItemMarkersMap.loadInstance();
+        if (instance == null) loadInstance();
         return instance;
     }
 
