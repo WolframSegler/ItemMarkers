@@ -6,7 +6,7 @@ Starsector mod that lets you add markers to wanted items or ships too see them a
 
 
 ## Forum Page
-Content details related to the mod can be found on [the fractalsoftworks forums](https://fractalsoftworks.com/forum/index.php?topic=0.0).
+Content details related to the mod can be found on [the fractalsoftworks forums](https://fractalsoftworks.com/forum/index.php?topic=35595.0).
 
 ## Credits
 
