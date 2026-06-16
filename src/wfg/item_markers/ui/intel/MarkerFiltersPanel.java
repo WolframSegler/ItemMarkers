@@ -27,7 +27,6 @@ import wfg.item_markers.item.MarkerFilters.ActiveFilters;
 import wfg.native_ui.ui.ComponentFactory;
 import wfg.native_ui.ui.core.UIBuildableAPI;
 import wfg.native_ui.ui.functional.Button;
-import wfg.native_ui.ui.functional.Button.CutStyle;
 import wfg.native_ui.ui.panel.CustomPanel;
 import wfg.native_ui.ui.widget.MultiSelect;
 import wfg.native_ui.ui.widget.RadioPanel;
@@ -102,7 +101,7 @@ public class MarkerFiltersPanel extends CustomPanel {
         add(shipLbl).belowLeft((UIComponentAPI) typeLbl, opad);
 
         final List<String> hullSizeStrings = Arrays.asList("Frigate", "Destroyer", "Cruiser", "Capital");
-        final MultiSelect hullSizeFilterButtons = new MultiSelect(m_panel, btnW*4 + opad*2, btnH, hullSizeStrings, LayoutMode.HORIZONTAL);
+        final MultiSelect hullSizeFilterButtons = new MultiSelect(m_panel, btnW*4 + opad, btnH, hullSizeStrings, LayoutMode.HORIZONTAL);
         hullSizeFilterButtons.onSelected = (multi) -> {
 
             MarkerFilters.hullSizeFilters.clear();
@@ -124,7 +123,7 @@ public class MarkerFiltersPanel extends CustomPanel {
         add(hullSizeFilterButtons).rightOfMid((UIComponentAPI) shipLbl, hpad);
 
         final List<String> wingRoles = Arrays.asList("Bomber", "Fighter", "Interceptor", "Assault", "Support");
-        final MultiSelect wingRoleButtons = new MultiSelect(m_panel, btnW*5 + opad*2, btnH, wingRoles, LayoutMode.HORIZONTAL);
+        final MultiSelect wingRoleButtons = new MultiSelect(m_panel, btnW*6 + opad, btnH, wingRoles, LayoutMode.HORIZONTAL);
         wingRoleButtons.onSelected = (multi) -> {
 
             MarkerFilters.wingRoleFilters.clear();
@@ -143,7 +142,7 @@ public class MarkerFiltersPanel extends CustomPanel {
             btn.setHighlightBrightness(0f);
             btn.bgColor = nearBlack;
         }
-        add(wingRoleButtons).rightOfMid(hullSizeFilterButtons.getPanel(), opad*2);
+        add(wingRoleButtons).rightOfMid(hullSizeFilterButtons.getPanel(), opad);
 
         final MultiSelect manufacturerFilterButtons = new MultiSelect(m_panel, btnW*5 + opad*2, btnH, MarkerFilters.manufacturers, LayoutMode.HORIZONTAL);
         manufacturerFilterButtons.onSelected = (multi) -> {
@@ -165,17 +164,6 @@ public class MarkerFiltersPanel extends CustomPanel {
             btn.bgColor = nearBlack;
         }
         add(manufacturerFilterButtons).belowLeft(hullSizeFilterButtons.getPanel(), hpad);
-
-        final Button allManufacturersBtn = new Button(m_panel, btnW, btnH, "All", Fonts.DEFAULT_SMALL, (btn) -> {
-            btn.setChecked(!btn.isChecked());
-            MarkerFilters.allManufacturers = btn.isChecked();
-            target.buildUI();
-        });
-        allManufacturersBtn.cutStyle = CutStyle.ALL;
-        allManufacturersBtn.setHighlightBrightness(0f);
-        allManufacturersBtn.bgColor = nearBlack;
-        allManufacturersBtn.setChecked(MarkerFilters.allManufacturers);
-        add(allManufacturersBtn).rightOfMid(manufacturerFilterButtons.getPanel(), hpad);
 
         final LabelAPI weaponLbl = settings.createLabel("Weapon", Fonts.ORBITRON_16);
         add(weaponLbl).belowLeft((UIComponentAPI) shipLbl, opad*2 + btnH);

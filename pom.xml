@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>item_markers</groupId>
   <artifactId>Item-Markers</artifactId>
-  <version>0.4.0</version>
+  <version>0.1.1</version>
   <packaging>jar</packaging>
   <name>Item Markers</name>
 

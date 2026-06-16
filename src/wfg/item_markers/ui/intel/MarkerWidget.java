@@ -16,6 +16,7 @@ import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
 import com.fs.starfarer.api.ui.UIPanelAPI;
 
+import wfg.item_markers.config.VisualConfig;
 import wfg.item_markers.item.ItemMarker;
 import wfg.native_ui.internal.util.BorderRenderer;
 import wfg.native_ui.ui.component.AudioFeedbackComp;
@@ -36,17 +37,14 @@ public class MarkerWidget extends UIClickable<MarkerWidget> implements WidgetAPI
     private static final Color WIDGET_BG = new Color(28, 35, 48, 240);
     private static final Color WIDGET_BG_SELECTED = new Color(46, 125, 50);
 
-    public static final int WIDTH = 100;
-    public static final int HEIGHT = 140;
-
     private final AudioFeedbackComp audio = comp().get(NativeComponents.AUDIO_FEEDBACK);
     private final HoverGlowComp glow = comp().get(NativeComponents.HOVER_GLOW);
-    private final BorderRenderer border = new BorderRenderer(UI_BORDER_3, true, WIDTH, HEIGHT);
+    private final BorderRenderer border = new BorderRenderer(UI_BORDER_3, true, VisualConfig.getWidgetW(), VisualConfig.getWidgetH());
 
     public final ItemMarker data;
 
     public MarkerWidget(UIPanelAPI parent, ItemMarker marker) {
-        super(parent, WIDTH, HEIGHT, null);
+        super(parent, VisualConfig.getWidgetW(), VisualConfig.getWidgetH(), null);
 
         data = marker;
 
@@ -67,7 +65,7 @@ public class MarkerWidget extends UIClickable<MarkerWidget> implements WidgetAPI
 
         final SpriteAPI sprite = settings.getSprite(data.iconID);
 
-        final int maxSize = WIDTH - opad * 2;
+        final int maxSize = VisualConfig.getWidgetW() - opad * 2;
         final float spriteW = sprite.getWidth();
         final float spriteH = sprite.getHeight();
         final float scale = Math.min(maxSize / spriteW, maxSize / spriteH);
@@ -86,8 +84,12 @@ public class MarkerWidget extends UIClickable<MarkerWidget> implements WidgetAPI
         final LabelAPI nameLbl = settings.createLabel(data.name, Fonts.DEFAULT_SMALL);
         nameLbl.setColor(base);
         nameLbl.setAlignment(Alignment.MID);
-        nameLbl.autoSizeToWidth(WIDTH - pad*2);
+        nameLbl.autoSizeToWidth(VisualConfig.getWidgetW() - pad*2);
         add(nameLbl).inBMid(hpad);
+
+        if (NativeUiUtils.intersects(icon.getPos(), nameLbl.getPosition())) {
+            remove(nameLbl);
+        }
 
         border.centerColor = data.isActive ? WIDGET_BG_SELECTED : WIDGET_BG;
     }

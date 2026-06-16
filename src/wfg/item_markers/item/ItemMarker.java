@@ -59,6 +59,7 @@ public class ItemMarker {
         for (WeaponSpecAPI spec : settings.getAllWeaponSpecs()) {
             if (spec.hasTag(Tags.NO_SELL) || spec.hasTag(Tags.WEAPON_NO_SELL) || spec.hasTag(Tags.HIDE_IN_CODEX)) continue;
             if (spec.getManufacturer().equals("Threat") || spec.getManufacturer().equals("Shrouded Dweller")) continue;
+            if (spec.getWeaponId().equals("shuttlepod") || spec.getManufacturer().equals("Unknown")) continue;
 
             allMarkers.add(new ItemMarker(MarkerType.WEAPON, spec.getWeaponId(), spec.getTurretSpriteName(), spec.getWeaponName(), spec));
         }

@@ -37,6 +37,7 @@ public class VisualConfigLoader {
         try {
             VisualConfig.CARGO_MARKER_POSITION = Alignment.valueOf(root.getString("CARGO_MARKER_POSITION"));
             VisualConfig.HIGHLIGHT_FRAME_ALPHA = (float) root.optDouble("HIGHLIGHT_FRAME_ALPHA", 1d);
+            VisualConfig.ITEM_FILTER_WIDGET_SCALAR = getItemFilterWidgetScalar(root.getString("ITEM_FILTER_WIDGET_SCALAR"));
 
             if (settings.getModManager().isModEnabled(LUNA_LIB)) {
                 loadFromLunaSettings();
@@ -50,5 +51,17 @@ public class VisualConfigLoader {
     public static final void loadFromLunaSettings() {
         VisualConfig.CARGO_MARKER_POSITION = Alignment.valueOf(LunaSettings.getString(ITEM_MARKERS, "CARGO_MARKER_POSITION"));
         VisualConfig.HIGHLIGHT_FRAME_ALPHA = LunaSettings.getFloat(ITEM_MARKERS, "HIGHLIGHT_FRAME_ALPHA");
+        VisualConfig.ITEM_FILTER_WIDGET_SCALAR = getItemFilterWidgetScalar(LunaSettings.getString(ITEM_MARKERS, "ITEM_FILTER_WIDGET_SCALAR"));
+    }
+
+    private static final float getItemFilterWidgetScalar(final String size) {
+        return switch(size) {
+            default -> 1f;
+            case "TINY" -> 0.6f;
+            case "SMALL" -> 0.8f;
+            case "MEDIUM" -> 1f;
+            case "LARGE" -> 1.2f;
+            case "HUGE" -> 1.4f;
+        };
     }
 }

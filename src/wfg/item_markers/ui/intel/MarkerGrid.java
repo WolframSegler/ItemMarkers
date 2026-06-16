@@ -12,6 +12,7 @@ import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.UIPanelAPI;
 
+import wfg.item_markers.config.VisualConfig;
 import wfg.item_markers.item.ItemMarker;
 import wfg.item_markers.item.MarkerFilters;
 import wfg.item_markers.item.MarkerFilters.ActiveFilters;
@@ -21,7 +22,9 @@ import wfg.native_ui.ui.table.GridTable;
 public class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
 
     public MarkerGrid(UIPanelAPI parent) {
-        super(parent, MarkerManagmentPanel.MAIN_PANEL_W, (int) (MarkerManagmentPanel.MAIN_PANEL_H * 0.67f), MarkerWidget.WIDTH, MarkerWidget.HEIGHT, opad);
+        super(parent, MarkerManagmentPanel.MAIN_PANEL_W, (int) (MarkerManagmentPanel.MAIN_PANEL_H * 0.67f),
+            VisualConfig.getWidgetW(), VisualConfig.getWidgetH(), opad
+        );
 
         uniformOuterGap = true;
         justifyGrid = true;
@@ -73,13 +76,13 @@ public class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
         case SHIP: {
             final ShipHullSpecAPI spec = (ShipHullSpecAPI) marker.spec;
             if (!MarkerFilters.hullSizeFilters.contains(spec.getHullSize())) return true;
-            if (!MarkerFilters.allManufacturers && !MarkerFilters.manufacturerFilters.contains(spec.getManufacturer())) return true;
+            if (filterManufacturers(spec.getManufacturer())) return true;
             break;
         }
 
         case FIGHTER: {
             final FighterWingSpecAPI spec = (FighterWingSpecAPI) marker.spec;
-            if (!MarkerFilters.allManufacturers && !MarkerFilters.manufacturerFilters.contains(spec.getVariant().getHullSpec().getManufacturer())) return true;
+            if (filterManufacturers(spec.getVariant().getHullSpec().getManufacturer())) return true;
             if (!MarkerFilters.wingRoleFilters.contains(spec.getRole())) return true;
             break;
         }
@@ -103,6 +106,16 @@ public class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
         if (marker.getCodexId() == null || marker.getCodexId().isEmpty()) return true;
 
         return false;
+    }
+
+    private static final boolean filterManufacturers(String manufacturer) {
+        if (MarkerFilters.manufacturerFilters.isEmpty()) return true;
+
+        final boolean isExplicit = MarkerFilters.EXPLICIT_MANUFACTURERS.contains(manufacturer);
+        final boolean explicitSelected = MarkerFilters.manufacturerFilters.contains(manufacturer);
+        final boolean otherSelected = MarkerFilters.manufacturerFilters.contains(MarkerFilters.OTHER_STRING);
+
+        return !((isExplicit && explicitSelected) || (!isExplicit && otherSelected));
     }
 
     private static final int compareMarkers(ItemMarker a, ItemMarker b) {

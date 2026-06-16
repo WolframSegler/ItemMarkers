@@ -1,2 +1,6 @@
+Version 0.1.1
+- Changed manufacturer filters. Removed the "all" category in favor of "other".
+- Added size presets to item widgets in the markers tab.
+
 Version 0.1.0
 - Initial release
