@@ -77,12 +77,14 @@ public class CargoTabUIBuilder implements CoreTabUIBuilder {
         final UIPanelAPI marketPicker = (UIPanelAPI) tradePanelChildren.stream()
             .filter(c -> RolfLectionUtil.hasMethodOfName("freezeOpenTab", c))
             .findFirst().orElse(null);
-        if (marketPicker == null) return;
+        if (marketPicker == null || IdentityMarker.isPresent(marketPicker)) return;
+        IdentityMarker.attach(marketPicker);
 
         final List<ButtonAPI> submarketButtons = (List<ButtonAPI>) RolfLectionUtil.getAllVariables(marketPicker).stream()
             .filter(f -> f instanceof List).findFirst().orElse(null);
 
         for (ButtonAPI btn : submarketButtons) {
+            
             final CargoAPI cargo = ((SubmarketAPI)btn.getCustomData()).getCargo();
 
             for (CargoStackAPI stack : cargo.getStacksCopy()) {
