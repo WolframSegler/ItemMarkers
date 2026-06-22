@@ -59,7 +59,6 @@ public class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
 
     protected void onWidgetClicked(MarkerWidget source) {
         ItemMarkersMap.instance().toggleMarker(source.data);
-        source.buildUI();
         Global.getSoundPlayer().playUISound("ui_button_pressed", 1f, 1f);
     }
 

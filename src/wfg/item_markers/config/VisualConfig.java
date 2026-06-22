@@ -14,6 +14,8 @@ public class VisualConfig {
     public static Alignment CARGO_MARKER_POSITION;
     public static float HIGHLIGHT_FRAME_ALPHA;
     public static float ITEM_FILTER_WIDGET_SCALAR;
+    public static boolean SIMPLE_WIDGET_BORDER;
+    public static boolean SIMPLE_WIDGET_ICON;
 
     public static int getWidgetW() { return (int) (WIDTH * ITEM_FILTER_WIDGET_SCALAR); }
     public static int getWidgetH() { return (int) (HEIGHT * ITEM_FILTER_WIDGET_SCALAR); }

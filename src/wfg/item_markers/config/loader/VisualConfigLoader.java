@@ -38,6 +38,8 @@ public class VisualConfigLoader {
             VisualConfig.CARGO_MARKER_POSITION = Alignment.valueOf(root.getString("CARGO_MARKER_POSITION"));
             VisualConfig.HIGHLIGHT_FRAME_ALPHA = (float) root.optDouble("HIGHLIGHT_FRAME_ALPHA", 1d);
             VisualConfig.ITEM_FILTER_WIDGET_SCALAR = getItemFilterWidgetScalar(root.getString("ITEM_FILTER_WIDGET_SCALAR"));
+            VisualConfig.SIMPLE_WIDGET_BORDER = root.getBoolean("SIMPLE_WIDGET_BORDER");
+            VisualConfig.SIMPLE_WIDGET_ICON = root.getBoolean("SIMPLE_WIDGET_ICON");
 
             if (settings.getModManager().isModEnabled(LUNA_LIB)) {
                 loadFromLunaSettings();
@@ -52,6 +54,8 @@ public class VisualConfigLoader {
         VisualConfig.CARGO_MARKER_POSITION = Alignment.valueOf(LunaSettings.getString(ITEM_MARKERS, "CARGO_MARKER_POSITION"));
         VisualConfig.HIGHLIGHT_FRAME_ALPHA = LunaSettings.getFloat(ITEM_MARKERS, "HIGHLIGHT_FRAME_ALPHA");
         VisualConfig.ITEM_FILTER_WIDGET_SCALAR = getItemFilterWidgetScalar(LunaSettings.getString(ITEM_MARKERS, "ITEM_FILTER_WIDGET_SCALAR"));
+        VisualConfig.SIMPLE_WIDGET_BORDER = LunaSettings.getBoolean(ITEM_MARKERS, "SIMPLE_WIDGET_BORDER");
+        VisualConfig.SIMPLE_WIDGET_ICON = LunaSettings.getBoolean(ITEM_MARKERS, "SIMPLE_WIDGET_ICON");
     }
 
     private static final float getItemFilterWidgetScalar(final String size) {

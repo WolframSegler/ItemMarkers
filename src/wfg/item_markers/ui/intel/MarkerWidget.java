@@ -27,19 +27,22 @@ import wfg.native_ui.ui.component.NativeComponents;
 import wfg.native_ui.ui.core.UIElementFlags.HasAudioFeedback;
 import wfg.native_ui.ui.core.UIElementFlags.HasHoverGlow;
 import wfg.native_ui.ui.functional.UIClickable;
+import wfg.native_ui.ui.panel.CustomPanel;
 import wfg.native_ui.ui.table.WidgetAPI;
 import wfg.native_ui.ui.visual.SpritePanelWithTp;
+import wfg.native_ui.ui.visual.SpritePanel.Base;
 import wfg.native_ui.util.NativeUiUtils;
+import wfg.native_ui.util.RenderUtils;
 
 public class MarkerWidget extends UIClickable<MarkerWidget> implements WidgetAPI<MarkerWidget>,
     HasAudioFeedback, HasHoverGlow
 {
     private static final Color WIDGET_BG = new Color(28, 35, 48, 240);
     private static final Color WIDGET_BG_SELECTED = new Color(46, 125, 50);
+    public static final BorderRenderer border = new BorderRenderer(UI_BORDER_3, true, VisualConfig.getWidgetW(), VisualConfig.getWidgetH());
 
     private final AudioFeedbackComp audio = comp().get(NativeComponents.AUDIO_FEEDBACK);
     private final HoverGlowComp glow = comp().get(NativeComponents.HOVER_GLOW);
-    private final BorderRenderer border = new BorderRenderer(UI_BORDER_3, true, VisualConfig.getWidgetW(), VisualConfig.getWidgetH());
 
     public final ItemMarker data;
 
@@ -53,8 +56,6 @@ public class MarkerWidget extends UIClickable<MarkerWidget> implements WidgetAPI
         glow.type = GlowType.UNDERLAY;
         glow.overlayBrightness = 0.6f;
         glow.color = base;
-
-        border.centerColor = WIDGET_BG;
 
         buildUI();
     }
@@ -72,13 +73,21 @@ public class MarkerWidget extends UIClickable<MarkerWidget> implements WidgetAPI
         final int scaledW = (int) (spriteW * scale);
         final int scaledH = (int) (spriteH * scale);
 
-        final SpritePanelWithTp icon = new SpritePanelWithTp(m_panel, scaledW, scaledH, sprite, null, null);
-        icon.tooltip.enabled = false;
-        icon.audio.enabled = false;
-        icon.glow.isFaderOwner = false;
-        icon.glow.fader = glow.fader;
-        icon.glow.type = GlowType.ADDITIVE;
-        icon.glow.additiveBrightness = 0.8f;
+        final CustomPanel icon;
+        if (VisualConfig.SIMPLE_WIDGET_ICON) {
+            icon = new Base(m_panel, scaledW, scaledH, sprite, null, null);
+
+        } else {
+            final SpritePanelWithTp tpIcon = new SpritePanelWithTp(m_panel, scaledW, scaledH, sprite, null, null);
+            tpIcon.tooltip.enabled = false;
+            tpIcon.audio.enabled = false;
+            tpIcon.glow.isFaderOwner = false;
+            tpIcon.glow.fader = glow.fader;
+            tpIcon.glow.type = GlowType.ADDITIVE;
+            tpIcon.glow.additiveBrightness = 0.8f;
+            icon = tpIcon;
+        }
+
         add(icon).inTMid(opad + (maxSize - scaledH) / 2);
 
         final LabelAPI nameLbl = settings.createLabel(data.name, Fonts.DEFAULT_SMALL);
@@ -87,18 +96,29 @@ public class MarkerWidget extends UIClickable<MarkerWidget> implements WidgetAPI
         nameLbl.autoSizeToWidth(VisualConfig.getWidgetW() - pad*2);
         add(nameLbl).inBMid(hpad);
 
-        if (NativeUiUtils.intersects(icon.getPos(), nameLbl.getPosition())) {
-            remove(nameLbl);
+        while (NativeUiUtils.intersects(icon.getPos(), nameLbl.getPosition())) {
+            final String text = nameLbl.getText();
+            if (text.length() <= 4) {
+                remove(nameLbl);
+            } else {
+                final String newTxt = text.substring(0, text.length() - 4) + "..";
+                nameLbl.setText(newTxt);
+                nameLbl.autoSizeToWidth(VisualConfig.getWidgetW() - pad*2);
+            }
         }
-
-        border.centerColor = data.isActive ? WIDGET_BG_SELECTED : WIDGET_BG;
     }
 
     @Override
     public void renderBelow(float alpha) {
         super.renderBelow(alpha);
 
-        border.render(pos.getX(), pos.getY(), alpha);
+        final Color bgColor = data.isActive ? WIDGET_BG_SELECTED : WIDGET_BG;
+        if (VisualConfig.SIMPLE_WIDGET_BORDER) {
+            RenderUtils.drawQuad(pos.getX(), pos.getY(), pos.getWidth(), pos.getHeight(), bgColor, alpha, false);
+        } else {
+            border.centerColor = bgColor;
+            border.render(pos.getX(), pos.getY(), alpha);
+        }
     }
 
     public UIComponentAPI getElement() {

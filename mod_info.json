@@ -2,7 +2,7 @@
 	"id":"wfg_item_markers",
 	"name":"Item Markers",
 	"author":"WolframSegler",
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"description":"Add markers to wanted items or ships too see them at a glance.",
 	"gameVersion":"0.98a-RC8",
 	"utility": false,

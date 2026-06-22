@@ -1,4 +1,6 @@
 fieldID,fieldName,fieldType,defaultValue,secondaryValue,fieldDescription,minValue,maxValue,tab
-CARGO_MARKER_POSITION,Commodity Marker Position,Radio,TL,"TL, TR, BL, BR",Determines the marker position for items inside the cargo screen.,,,VISUAL
-HIGHLIGHT_FRAME_ALPHA,Highlight Frame Opacity,Double,0.7,,Determines how pronounced the frame around marked items are.,0.0,1.0,VISUAL
-ITEM_FILTER_WIDGET_SCALAR,Filter Widget Size,Radio,MEDIUM,"TINY, SMALL, MEDIUM, LARGE, HUGE",Determines the size of the item widgets inside the markers tab,,,VISUAL
+CARGO_MARKER_POSITION,Commodity Marker Position,Radio,TL,"TL, TR, BL, BR",Determines the marker position for items inside the cargo screen.,,,Visual
+HIGHLIGHT_FRAME_ALPHA,Highlight Frame Opacity,Double,0.7,,Determines how pronounced the frame around marked items are.,0.0,1.0,Visual
+ITEM_FILTER_WIDGET_SCALAR,Filter Widget Size,Radio,MEDIUM,"TINY, SMALL, MEDIUM, LARGE, HUGE",Determines the size of the item widgets inside the markers tab.,,,Visual
+SIMPLE_WIDGET_BORDER,Simple Widget Border,Boolean,false,,Determines whether if a simplified widget border will be used. Useful for performance.,,,Visual
+SIMPLE_WIDGET_ICON,Simple Widget Icon,Boolean,false,,Determines whether if a simplified icon will be used. Useful for performance.,,,Visual
