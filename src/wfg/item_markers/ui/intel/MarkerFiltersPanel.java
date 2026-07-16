@@ -77,10 +77,10 @@ public class MarkerFiltersPanel extends CustomPanel {
         add(typeLbl).belowLeft(uiBuilder, opad);
 
         final MultiSelect typeFilterButtons = new MultiSelect(m_panel, btnW*6 + opad*4, btnH, MarkerType.getLabels(), LayoutMode.HORIZONTAL);
-        typeFilterButtons.onSelected = (multi) -> {
+        typeFilterButtons.onSelected = (button) -> {
 
             MarkerFilters.typeFilter.clear();
-            for (int index : multi.getSelectedIndexes()) {
+            for (int index : typeFilterButtons.getSelectedIndexes()) {
                 MarkerFilters.typeFilter.add(MarkerType.ALL_MARKERS[index]);
             }
             target.buildUI();
@@ -102,10 +102,10 @@ public class MarkerFiltersPanel extends CustomPanel {
 
         final List<String> hullSizeStrings = Arrays.asList("Frigate", "Destroyer", "Cruiser", "Capital");
         final MultiSelect hullSizeFilterButtons = new MultiSelect(m_panel, btnW*4 + opad, btnH, hullSizeStrings, LayoutMode.HORIZONTAL);
-        hullSizeFilterButtons.onSelected = (multi) -> {
+        hullSizeFilterButtons.onSelected = (button) -> {
 
             MarkerFilters.hullSizeFilters.clear();
-            for (int index : multi.getSelectedIndexes()) {
+            for (int index : hullSizeFilterButtons.getSelectedIndexes()) {
                 MarkerFilters.hullSizeFilters.add(HullSize.values()[index + 2]);
             }
             target.buildUI();
@@ -124,10 +124,10 @@ public class MarkerFiltersPanel extends CustomPanel {
 
         final List<String> wingRoles = Arrays.asList("Bomber", "Fighter", "Interceptor", "Assault", "Support");
         final MultiSelect wingRoleButtons = new MultiSelect(m_panel, btnW*6 + opad, btnH, wingRoles, LayoutMode.HORIZONTAL);
-        wingRoleButtons.onSelected = (multi) -> {
+        wingRoleButtons.onSelected = (button) -> {
 
             MarkerFilters.wingRoleFilters.clear();
-            for (Integer index : multi.getSelectedIndexes()) {
+            for (Integer index : wingRoleButtons.getSelectedIndexes()) {
                 MarkerFilters.wingRoleFilters.add(WingRole.values()[index]);
             }
             target.buildUI();
@@ -145,10 +145,10 @@ public class MarkerFiltersPanel extends CustomPanel {
         add(wingRoleButtons).rightOfMid(hullSizeFilterButtons.getPanel(), opad);
 
         final MultiSelect manufacturerFilterButtons = new MultiSelect(m_panel, btnW*5 + opad*2, btnH, MarkerFilters.manufacturers, LayoutMode.HORIZONTAL);
-        manufacturerFilterButtons.onSelected = (multi) -> {
+        manufacturerFilterButtons.onSelected = (button) -> {
 
             MarkerFilters.manufacturerFilters.clear();
-            for (String key : multi.getSelectedStrings()) {
+            for (String key : manufacturerFilterButtons.getSelectedStrings()) {
                 MarkerFilters.manufacturerFilters.add(key);
             }
             target.buildUI();
@@ -170,10 +170,10 @@ public class MarkerFiltersPanel extends CustomPanel {
 
         final List<String> weaponSizeStrings = Arrays.asList(WeaponSize.SMALL.getDisplayName(), WeaponSize.MEDIUM.getDisplayName(), WeaponSize.LARGE.getDisplayName());
         final MultiSelect weaponSizeButtons = new MultiSelect(m_panel, btnW*3 + opad*2, btnH, weaponSizeStrings, LayoutMode.HORIZONTAL);
-        weaponSizeButtons.onSelected = (multi) -> {
+        weaponSizeButtons.onSelected = (button) -> {
 
             MarkerFilters.weaponSizeFilters.clear();
-            for (int index : multi.getSelectedIndexes()) {
+            for (int index : weaponSizeButtons.getSelectedIndexes()) {
                 MarkerFilters.weaponSizeFilters.add(WeaponSize.values()[index]);
             }
             target.buildUI();
@@ -196,10 +196,10 @@ public class MarkerFiltersPanel extends CustomPanel {
             DamageType.OTHER.getDisplayName()
         );
         final MultiSelect damageTypeButtons = new MultiSelect(m_panel, btnW*5 + opad*4, btnH, damageTypeStrings, LayoutMode.HORIZONTAL);
-        damageTypeButtons.onSelected = (multi) -> {
+        damageTypeButtons.onSelected = (button) -> {
 
             MarkerFilters.weaponDamageFilters.clear();
-            for (int index : multi.getSelectedIndexes()) {
+            for (int index : damageTypeButtons.getSelectedIndexes()) {
                 MarkerFilters.weaponDamageFilters.add(DamageType.values()[index]);
             }
             target.buildUI();
@@ -234,7 +234,7 @@ public class MarkerFiltersPanel extends CustomPanel {
             }
         } else {
             nameField.setColor(gray);
-            if (nameField.getText().isEmpty()) {
+            if (nameField.getText().isBlank()) {
                 nameField.setText(emptyNameFieldTxt);
             }
         }
