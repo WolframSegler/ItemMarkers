@@ -28,6 +28,6 @@ public class IntelTabUIBuilder extends AbstractTabButtonInjector {
     }
 
     protected UIComponentAPI createCustomComponent(UIPanelAPI parent) {
-        return new MarkerManagmentPanel(parent).getPanel();
+        return new MarkerManagmentPanel();
     }
 }

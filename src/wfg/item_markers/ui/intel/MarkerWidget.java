@@ -13,8 +13,6 @@ import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
-import com.fs.starfarer.api.ui.UIComponentAPI;
-import com.fs.starfarer.api.ui.UIPanelAPI;
 
 import wfg.item_markers.config.VisualConfig;
 import wfg.item_markers.item.ItemMarker;
@@ -24,13 +22,13 @@ import wfg.native_ui.ui.component.HoverGlowComp;
 import wfg.native_ui.ui.component.HoverGlowComp.GlowType;
 import wfg.native_ui.ui.component.InteractionComp;
 import wfg.native_ui.ui.component.NativeComponents;
+import wfg.native_ui.ui.core.UIElementAPI;
 import wfg.native_ui.ui.core.UIElementFlags.HasAudioFeedback;
 import wfg.native_ui.ui.core.UIElementFlags.HasHoverGlow;
-import wfg.native_ui.ui.functional.UIClickable;
-import wfg.native_ui.ui.panel.CustomPanel;
+import wfg.native_ui.ui.interaction.UIClickable;
 import wfg.native_ui.ui.table.WidgetAPI;
-import wfg.native_ui.ui.visual.SpritePanelWithTp;
-import wfg.native_ui.ui.visual.SpritePanel.Base;
+import wfg.native_ui.ui.visual.InteractiveSprite;
+import wfg.native_ui.ui.visual.AbstractSpriteElement.SpriteElement;
 import wfg.native_ui.util.NativeUiUtils;
 import wfg.native_ui.util.RenderUtils;
 
@@ -46,15 +44,16 @@ public class MarkerWidget extends UIClickable<MarkerWidget> implements WidgetAPI
 
     public final ItemMarker data;
 
-    public MarkerWidget(UIPanelAPI parent, ItemMarker marker) {
-        super(parent, VisualConfig.getWidgetW(), VisualConfig.getWidgetH(), null);
+    public MarkerWidget(ItemMarker marker) {
+        super(VisualConfig.getWidgetW(), VisualConfig.getWidgetH(), null);
 
         data = marker;
 
         audio.hoverOnly = true;
 
         glow.type = GlowType.UNDERLAY;
-        glow.overlayBrightness = 0.6f;
+        glow.glowBrightness = 1.2f;
+        glow.flashBrightness = 1.8f;
         glow.color = base;
 
         buildUI();
@@ -73,19 +72,20 @@ public class MarkerWidget extends UIClickable<MarkerWidget> implements WidgetAPI
         final int scaledW = (int) (spriteW * scale);
         final int scaledH = (int) (spriteH * scale);
 
-        final CustomPanel icon;
+        final UIElementAPI icon;
         if (VisualConfig.SIMPLE_WIDGET_ICON) {
-            icon = new Base(m_panel, scaledW, scaledH, sprite, null, null);
+            icon = new SpriteElement(scaledW, scaledH, sprite, null, null);
 
         } else {
-            final SpritePanelWithTp tpIcon = new SpritePanelWithTp(m_panel, scaledW, scaledH, sprite, null, null);
-            tpIcon.tooltip.enabled = false;
-            tpIcon.audio.enabled = false;
-            tpIcon.glow.isFaderOwner = false;
-            tpIcon.glow.fader = glow.fader;
-            tpIcon.glow.type = GlowType.ADDITIVE;
-            tpIcon.glow.additiveBrightness = 0.8f;
-            icon = tpIcon;
+            final InteractiveSprite interactiveIcon = new InteractiveSprite(scaledW, scaledH, sprite, null, null);
+            interactiveIcon.tooltip.enabled = false;
+            interactiveIcon.audio.enabled = false;
+            interactiveIcon.glow.isFaderOwner = false;
+            interactiveIcon.glow.fader = glow.fader;
+            interactiveIcon.glow.type = GlowType.ADDITIVE;
+            interactiveIcon.glow.glowBrightness = 0.8f;
+            interactiveIcon.glow.flashBrightness = 1.2f;
+            icon = interactiveIcon;
         }
 
         add(icon).inTMid(opad + (maxSize - scaledH) / 2);
@@ -96,7 +96,7 @@ public class MarkerWidget extends UIClickable<MarkerWidget> implements WidgetAPI
         nameLbl.autoSizeToWidth(VisualConfig.getWidgetW() - pad*2);
         add(nameLbl).inBMid(hpad);
 
-        while (NativeUiUtils.intersects(icon.getPos(), nameLbl.getPosition())) {
+        while (NativeUiUtils.intersects(icon.pos(), nameLbl.getPosition())) {
             final String text = nameLbl.getText();
             if (text.length() <= 4) {
                 remove(nameLbl);
@@ -109,20 +109,14 @@ public class MarkerWidget extends UIClickable<MarkerWidget> implements WidgetAPI
     }
 
     @Override
-    public void renderBelow(float alpha) {
-        super.renderBelow(alpha);
-
+    public void renderBelowImpl(float alpha) {
         final Color bgColor = data.isActive ? WIDGET_BG_SELECTED : WIDGET_BG;
         if (VisualConfig.SIMPLE_WIDGET_BORDER) {
-            RenderUtils.drawQuad(pos.getX(), pos.getY(), pos.getWidth(), pos.getHeight(), bgColor, alpha, false);
+            RenderUtils.drawQuad(getX(), getY(), getWidth(), getHeight(), bgColor, alpha, false);
         } else {
             border.centerColor = bgColor;
-            border.render(pos.getX(), pos.getY(), alpha);
+            border.render(getX(), getY(), alpha);
         }
-    }
-
-    public UIComponentAPI getElement() {
-        return m_panel;
     }
 
     public InteractionComp<MarkerWidget> getInteraction() {
@@ -130,9 +124,9 @@ public class MarkerWidget extends UIClickable<MarkerWidget> implements WidgetAPI
     }
 
     @Override
-    public void processInput(List<InputEventAPI> events) {
-        super.processInput(events);
-        if (!NativeUiUtils.containsMouse(pos)) return;
+    public void processInputImpl(List<InputEventAPI> events) {
+        super.processInputImpl(events);
+        if (!NativeUiUtils.containsMouse(mPos)) return;
         
         for (InputEventAPI e : events) {
             if (!e.isConsumed() && e.isKeyboardEvent() && e.getEventValue() == Keyboard.KEY_F2) {

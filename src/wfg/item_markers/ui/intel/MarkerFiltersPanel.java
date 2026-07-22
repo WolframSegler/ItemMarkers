@@ -19,21 +19,20 @@ import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TextFieldAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
-import com.fs.starfarer.api.ui.UIPanelAPI;
 
 import wfg.item_markers.item.MarkerFilters;
 import wfg.item_markers.item.MarkerType;
 import wfg.item_markers.item.MarkerFilters.ActiveFilters;
+import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.ComponentFactory;
 import wfg.native_ui.ui.core.UIBuildableAPI;
-import wfg.native_ui.ui.functional.Button;
-import wfg.native_ui.ui.panel.CustomPanel;
+import wfg.native_ui.ui.widget.Button;
 import wfg.native_ui.ui.widget.MultiSelect;
 import wfg.native_ui.ui.widget.RadioPanel;
 import wfg.native_ui.ui.widget.RadioPanel.LayoutMode;
 import wfg.native_ui.util.NativeUiUtils;
 
-public class MarkerFiltersPanel extends CustomPanel {
+public class MarkerFiltersPanel extends UIContainer {
     private static final int nameFieldW = 192;
     private static final int btnH = 24;
     private static final int btnW = 100;
@@ -43,8 +42,8 @@ public class MarkerFiltersPanel extends CustomPanel {
     private final UIBuildableAPI target;
     private final TextFieldAPI nameField;
     
-    public MarkerFiltersPanel(UIPanelAPI parent, UIBuildableAPI target) {
-        super(parent, MarkerManagmentPanel.MAIN_PANEL_W, (int) (MarkerManagmentPanel.MAIN_PANEL_H * 0.33f));
+    public MarkerFiltersPanel(UIBuildableAPI target) {
+        super(MarkerManagmentPanel.MAIN_PANEL_W, (int) (MarkerManagmentPanel.MAIN_PANEL_H * 0.33f));
 
         this.target = target;
 
@@ -56,9 +55,9 @@ public class MarkerFiltersPanel extends CustomPanel {
         nameField.setLimitByStringWidth(true);
         nameField.setUndoOnEscape(true);
         nameField.getPosition().inBL(0f, 0f);
-        ComponentFactory.addTooltip(uiBuilder, btnH, false, m_panel).inTL(pad, pad);
+        ComponentFactory.addTooltip(uiBuilder, btnH, false, this).inTL(pad, pad);
 
-        final RadioPanel activeFilterButtons = new RadioPanel(m_panel, btnW*3 + opad*2, btnH, LayoutMode.HORIZONTAL)
+        final RadioPanel activeFilterButtons = new RadioPanel(btnW*3 + opad*2, btnH, LayoutMode.HORIZONTAL)
             .addOption("All", MarkerFilters.activeFilter == ActiveFilters.ALL)
             .addOption("Active", MarkerFilters.activeFilter == ActiveFilters.ACTIVE_ONLY)
             .addOption("Inactive", MarkerFilters.activeFilter == ActiveFilters.INACTIVE_ONLY);
@@ -76,13 +75,16 @@ public class MarkerFiltersPanel extends CustomPanel {
         final LabelAPI typeLbl = settings.createLabel("Type", Fonts.ORBITRON_16);
         add(typeLbl).belowLeft(uiBuilder, opad);
 
-        final MultiSelect typeFilterButtons = new MultiSelect(m_panel, btnW*6 + opad*4, btnH, MarkerType.getLabels(), LayoutMode.HORIZONTAL);
+        final MultiSelect typeFilterButtons = new MultiSelect(btnW*6 + opad*4, btnH, MarkerType.getLabels(), LayoutMode.HORIZONTAL);
         typeFilterButtons.onSelected = (button) -> {
 
-            MarkerFilters.typeFilter.clear();
-            for (int index : typeFilterButtons.getSelectedIndexes()) {
-                MarkerFilters.typeFilter.add(MarkerType.ALL_MARKERS[index]);
+            final MarkerType marker = MarkerType.ALL_MARKERS[(Integer) button.customData];
+            if (button.isChecked()) {
+                MarkerFilters.typeFilter.add(marker);
+            } else {
+                MarkerFilters.typeFilter.remove(marker);
             }
+
             target.buildUI();
         };
         typeFilterButtons.buildUI();
@@ -101,13 +103,16 @@ public class MarkerFiltersPanel extends CustomPanel {
         add(shipLbl).belowLeft((UIComponentAPI) typeLbl, opad);
 
         final List<String> hullSizeStrings = Arrays.asList("Frigate", "Destroyer", "Cruiser", "Capital");
-        final MultiSelect hullSizeFilterButtons = new MultiSelect(m_panel, btnW*4 + opad, btnH, hullSizeStrings, LayoutMode.HORIZONTAL);
+        final MultiSelect hullSizeFilterButtons = new MultiSelect(btnW*4 + opad, btnH, hullSizeStrings, LayoutMode.HORIZONTAL);
         hullSizeFilterButtons.onSelected = (button) -> {
 
-            MarkerFilters.hullSizeFilters.clear();
-            for (int index : hullSizeFilterButtons.getSelectedIndexes()) {
-                MarkerFilters.hullSizeFilters.add(HullSize.values()[index + 2]);
+            final HullSize marker = HullSize.values()[((Integer) button.customData) + 2];
+            if (button.isChecked()) {
+                MarkerFilters.hullSizeFilters.add(marker);
+            } else {
+                MarkerFilters.hullSizeFilters.remove(marker);
             }
+
             target.buildUI();
         };
         hullSizeFilterButtons.buildUI();
@@ -123,13 +128,16 @@ public class MarkerFiltersPanel extends CustomPanel {
         add(hullSizeFilterButtons).rightOfMid((UIComponentAPI) shipLbl, hpad);
 
         final List<String> wingRoles = Arrays.asList("Bomber", "Fighter", "Interceptor", "Assault", "Support");
-        final MultiSelect wingRoleButtons = new MultiSelect(m_panel, btnW*6 + opad, btnH, wingRoles, LayoutMode.HORIZONTAL);
+        final MultiSelect wingRoleButtons = new MultiSelect(btnW*6 + opad, btnH, wingRoles, LayoutMode.HORIZONTAL);
         wingRoleButtons.onSelected = (button) -> {
 
-            MarkerFilters.wingRoleFilters.clear();
-            for (Integer index : wingRoleButtons.getSelectedIndexes()) {
-                MarkerFilters.wingRoleFilters.add(WingRole.values()[index]);
+            final WingRole marker = WingRole.values()[(Integer) button.customData];
+            if (button.isChecked()) {
+                MarkerFilters.wingRoleFilters.add(marker);
+            } else {
+                MarkerFilters.wingRoleFilters.remove(marker);
             }
+
             target.buildUI();
         };
         wingRoleButtons.buildUI();
@@ -142,9 +150,9 @@ public class MarkerFiltersPanel extends CustomPanel {
             btn.setHighlightBrightness(0f);
             btn.bgColor = nearBlack;
         }
-        add(wingRoleButtons).rightOfMid(hullSizeFilterButtons.getPanel(), opad);
+        add(wingRoleButtons).rightOfMid(hullSizeFilterButtons, opad);
 
-        final MultiSelect manufacturerFilterButtons = new MultiSelect(m_panel, btnW*5 + opad*2, btnH, MarkerFilters.manufacturers, LayoutMode.HORIZONTAL);
+        final MultiSelect manufacturerFilterButtons = new MultiSelect(btnW*5 + opad*2, btnH, MarkerFilters.manufacturers, LayoutMode.HORIZONTAL);
         manufacturerFilterButtons.onSelected = (button) -> {
 
             MarkerFilters.manufacturerFilters.clear();
@@ -163,19 +171,22 @@ public class MarkerFiltersPanel extends CustomPanel {
             btn.setHighlightBrightness(0f);
             btn.bgColor = nearBlack;
         }
-        add(manufacturerFilterButtons).belowLeft(hullSizeFilterButtons.getPanel(), hpad);
+        add(manufacturerFilterButtons).belowLeft(hullSizeFilterButtons, hpad);
 
         final LabelAPI weaponLbl = settings.createLabel("Weapon", Fonts.ORBITRON_16);
         add(weaponLbl).belowLeft((UIComponentAPI) shipLbl, opad*2 + btnH);
 
         final List<String> weaponSizeStrings = Arrays.asList(WeaponSize.SMALL.getDisplayName(), WeaponSize.MEDIUM.getDisplayName(), WeaponSize.LARGE.getDisplayName());
-        final MultiSelect weaponSizeButtons = new MultiSelect(m_panel, btnW*3 + opad*2, btnH, weaponSizeStrings, LayoutMode.HORIZONTAL);
+        final MultiSelect weaponSizeButtons = new MultiSelect(btnW*3 + opad*2, btnH, weaponSizeStrings, LayoutMode.HORIZONTAL);
         weaponSizeButtons.onSelected = (button) -> {
 
-            MarkerFilters.weaponSizeFilters.clear();
-            for (int index : weaponSizeButtons.getSelectedIndexes()) {
-                MarkerFilters.weaponSizeFilters.add(WeaponSize.values()[index]);
+            final WeaponSize marker = WeaponSize.values()[(Integer) button.customData];
+            if (button.isChecked()) {
+                MarkerFilters.weaponSizeFilters.add(marker);
+            } else {
+                MarkerFilters.weaponSizeFilters.remove(marker);
             }
+
             target.buildUI();
         };
         weaponSizeButtons.buildUI();
@@ -195,13 +206,16 @@ public class MarkerFiltersPanel extends CustomPanel {
             DamageType.FRAGMENTATION.getDisplayName(), DamageType.ENERGY.getDisplayName(),
             DamageType.OTHER.getDisplayName()
         );
-        final MultiSelect damageTypeButtons = new MultiSelect(m_panel, btnW*5 + opad*4, btnH, damageTypeStrings, LayoutMode.HORIZONTAL);
+        final MultiSelect damageTypeButtons = new MultiSelect(btnW*5 + opad*4, btnH, damageTypeStrings, LayoutMode.HORIZONTAL);
         damageTypeButtons.onSelected = (button) -> {
 
-            MarkerFilters.weaponDamageFilters.clear();
-            for (int index : damageTypeButtons.getSelectedIndexes()) {
-                MarkerFilters.weaponDamageFilters.add(DamageType.values()[index]);
+            final DamageType marker = DamageType.values()[(Integer) button.customData];
+            if (button.isChecked()) {
+                MarkerFilters.weaponDamageFilters.add(marker);
+            } else {
+                MarkerFilters.weaponDamageFilters.remove(marker);
             }
+
             target.buildUI();
         };
         damageTypeButtons.buildUI();
@@ -214,12 +228,12 @@ public class MarkerFiltersPanel extends CustomPanel {
             btn.setHighlightBrightness(0f);
             btn.bgColor = nearBlack;
         }
-        add(damageTypeButtons).belowLeft(weaponSizeButtons.getPanel(), hpad);
+        add(damageTypeButtons).belowLeft(weaponSizeButtons, hpad);
     }
 
     @Override
-    public void advance(float delta) {
-        super.advance(delta);
+    public void advanceImpl(float delta) {
+        super.advanceImpl(delta);
 
         if (nameField.hasFocus()) {
             final String current = nameField.getText();
@@ -241,8 +255,8 @@ public class MarkerFiltersPanel extends CustomPanel {
     }
 
     @Override
-    public void processInput(List<InputEventAPI> events) {
-        super.processInput(events);
+    public void processInputImpl(List<InputEventAPI> events) {
+        super.processInputImpl(events);
 
         for (InputEventAPI event : events) {
             if (event.isConsumed()) continue;

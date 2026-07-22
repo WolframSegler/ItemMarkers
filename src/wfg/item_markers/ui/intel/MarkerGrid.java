@@ -10,7 +10,6 @@ import com.fs.starfarer.api.loading.FighterWingSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
-import com.fs.starfarer.api.ui.UIPanelAPI;
 
 import wfg.item_markers.config.VisualConfig;
 import wfg.item_markers.item.ItemMarker;
@@ -21,8 +20,8 @@ import wfg.native_ui.ui.table.GridTable;
 
 public class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
 
-    public MarkerGrid(UIPanelAPI parent) {
-        super(parent, MarkerManagmentPanel.MAIN_PANEL_W, (int) (MarkerManagmentPanel.MAIN_PANEL_H * 0.67f),
+    public MarkerGrid() {
+        super(MarkerManagmentPanel.MAIN_PANEL_W, (int) (MarkerManagmentPanel.MAIN_PANEL_H * 0.67f),
             VisualConfig.getWidgetW(), VisualConfig.getWidgetH(), opad
         );
 
@@ -52,7 +51,7 @@ public class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
     }
 
     protected MarkerWidget createWidget(ItemMarker item, int index) {
-        final MarkerWidget widget = new MarkerWidget(container, item);
+        final MarkerWidget widget = new MarkerWidget(item);
 
         return widget;
     }

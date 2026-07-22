@@ -13,6 +13,7 @@ import com.fs.starfarer.api.campaign.SpecialItemData;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.econ.SubmarketAPI;
 import com.fs.starfarer.api.ui.ButtonAPI;
+import com.fs.starfarer.api.ui.UIComponentAPI;
 import com.fs.starfarer.api.ui.UIPanelAPI;
 import com.fs.starfarer.campaign.ui.trade.CargoDataGridView;
 import com.fs.starfarer.campaign.ui.trade.CargoStackView;
@@ -23,8 +24,9 @@ import wfg.item_markers.item.ItemMarker;
 import wfg.item_markers.serializable.ItemMarkersMap;
 import wfg.item_markers.ui.Sprites;
 import wfg.native_ui.ui.Attachments;
-import wfg.native_ui.ui.panel.CustomPanel;
-import wfg.native_ui.ui.visual.SpritePanel.Base;
+import wfg.native_ui.ui.MethodFields;
+import wfg.native_ui.ui.util.IdentityMarker;
+import wfg.native_ui.ui.visual.AbstractSpriteElement.SpriteElement;
 
 public class CargoTabUIBuilder implements CoreTabUIBuilder {
 
@@ -49,32 +51,32 @@ public class CargoTabUIBuilder implements CoreTabUIBuilder {
             "getCargoDataView", entityCargoDisplay);
 
         final HashMap<String, ItemMarker> activeMarkers = ItemMarkersMap.instance().activeMarkers;
-        for (Object child : (List<Object>) RolfLectionUtil.invokeMethodDirectly(CustomPanel.getChildrenNonCopyMethod, grid)) {
+        for (UIComponentAPI child : MethodFields.getChildrenNonCopy(grid)) {
             if (child instanceof CargoStackView view) {
                 if (IdentityMarker.isPresent(view)) continue;
                 IdentityMarker.attach(view);
 
                 if (!activeMarkers.containsKey(getStackId(view.getStack()))) continue;
-                final Base icon = new Base(view, 20, 20, Sprites.MARKER, null, null);
+                final SpriteElement icon = new SpriteElement(20, 20, Sprites.MARKER, null, null);
                 
                 switch (VisualConfig.CARGO_MARKER_POSITION) {
-                    default -> view.addComponent(icon.getPanel()).inTL(pad, pad);
-                    case TL -> view.addComponent(icon.getPanel()).inTL(pad, pad);
-                    case TR -> view.addComponent(icon.getPanel()).inTR(pad, pad);
-                    case BL -> view.addComponent(icon.getPanel()).inBL(pad, pad);
-                    case BR -> view.addComponent(icon.getPanel()).inBR(pad, pad);
+                    default -> view.addComponent(icon).inTL(pad, pad);
+                    case TL -> view.addComponent(icon).inTL(pad, pad);
+                    case TR -> view.addComponent(icon).inTR(pad, pad);
+                    case BL -> view.addComponent(icon).inBL(pad, pad);
+                    case BR -> view.addComponent(icon).inBR(pad, pad);
                 }
 
                 if (VisualConfig.HIGHLIGHT_FRAME_ALPHA > 0f) {
-                    final Base hue = new Base(view, (int) view.getWidth(), (int) view.getHeight(), Sprites.HUE_FRAME, null, null);
-                    view.addComponent(hue.getPanel()).inBL(0f, 0f);
+                    final SpriteElement hue = new SpriteElement(view.getWidth(), view.getHeight(), Sprites.HUE_FRAME, null, null);
+                    view.addComponent(hue).inBL(0f, 0f);
                     hue.texColor = new Color(1f, 1f, 1f, VisualConfig.HIGHLIGHT_FRAME_ALPHA);
                 }
             }
         }
 
-        final List<Object> tradePanelChildren = (List<Object>) RolfLectionUtil.invokeMethodDirectly(CustomPanel.getChildrenNonCopyMethod, tradePanel);
-        final UIPanelAPI marketPicker = (UIPanelAPI) tradePanelChildren.stream()
+        final UIPanelAPI marketPicker = (UIPanelAPI) MethodFields
+            .getChildrenNonCopy(tradePanel).stream()
             .filter(c -> RolfLectionUtil.hasMethodOfName("freezeOpenTab", c))
             .findFirst().orElse(null);
         if (marketPicker == null || IdentityMarker.isPresent(marketPicker)) return;
@@ -89,8 +91,8 @@ public class CargoTabUIBuilder implements CoreTabUIBuilder {
 
             for (CargoStackAPI stack : cargo.getStacksCopy()) {
                 if (activeMarkers.containsKey(getStackId(stack))) {
-                    final Base icon = new Base(marketPicker, 20, 20, Sprites.MARKER, null, null);
-                    marketPicker.addComponent(icon.getPanel()).rightOfTop(btn, -16);
+                    final SpriteElement icon = new SpriteElement(20, 20, Sprites.MARKER, null, null);
+                    marketPicker.addComponent(icon).rightOfTop(btn, -16);
                     break;
                 }
             }
