@@ -1,7 +1,10 @@
 {
     "graphics": {
         "ui": {
-            "hue_frame": "graphics/ui/hue_frame.png"
+            "hue_frame": "graphics/ui/hue_frame.png",
+            "delete": "graphics/ui/delete_icon.png",
+            "rename": "graphics/ui/rename_icon.png",
+            "apply": "graphics/ui/apply_icon.png"
         }
     }
 }

@@ -33,7 +33,7 @@ public class ItemMarkersMap implements Serializable {
         activeMarkers.remove(marker.itemID);
     }
 
-    private final void rebuildMarkers() {
+    public final void rebuildMarkers() {
         activeMarkers = new HashMap<>(activeMarkerIds.size());
         for (ItemMarker marker : ItemMarker.getAllMarkers()) {
             if (activeMarkerIds.contains(marker.itemID)) {

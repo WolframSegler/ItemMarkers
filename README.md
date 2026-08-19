@@ -11,3 +11,11 @@ Content details related to the mod can be found on [the fractalsoftworks forums]
 ## Credits
 
 rolfosian - for providing the [reflection library](https://github.com/rolfosian/RolflectionLib-SS).
+
+## Attributes
+
+Delete by El Maestro Design from <a href="https://thenounproject.com/browse/icons/term/delete/" target="_blank" title="Delete Icons">Noun Project</a> (CC BY 3.0)
+
+rename by Utari Nuraeni from <a href="https://thenounproject.com/browse/icons/term/rename/" target="_blank" title="rename Icons">Noun Project</a> (CC BY 3.0)
+
+apply by Heztasia from <a href="https://thenounproject.com/browse/icons/term/apply/" target="_blank" title="apply Icons">Noun Project</a> (CC BY 3.0)
