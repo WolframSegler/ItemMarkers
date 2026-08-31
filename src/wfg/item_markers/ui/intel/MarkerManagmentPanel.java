@@ -28,7 +28,7 @@ public class MarkerManagmentPanel extends UIContainer implements UIBuildableAPI 
         final MarkerFiltersPanel filter = new MarkerFiltersPanel(grid);
         add(filter).inTL(0f, 0f);
 
-        final Button presetBtn = new Button(120, 28, "Manage Presets", Fonts.INSIGNIA_LARGE, (btn) -> new MarkerPresetDialog(grid));
+        final Button presetBtn = new Button(150, 28, "Manage Presets", Fonts.INSIGNIA_LARGE, (btn) -> new MarkerPresetDialog(grid));
         add(presetBtn).aboveRight(grid, pad*2);
     }
 }

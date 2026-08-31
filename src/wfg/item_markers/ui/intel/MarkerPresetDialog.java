@@ -12,7 +12,6 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TextFieldAPI;
-import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
 import com.fs.starfarer.api.util.Misc;
 
@@ -26,6 +25,7 @@ import wfg.native_ui.internal.util.BorderRenderer;
 import wfg.native_ui.ui.ComponentFactory;
 import wfg.native_ui.ui.component.HoverGlowComp.GlowType;
 import wfg.native_ui.ui.core.UIBuildableAPI;
+import wfg.native_ui.ui.core.UIContainerAPI;
 import wfg.native_ui.ui.dialog.DialogPanel;
 import wfg.native_ui.ui.visual.AbstractSpriteElement.SpriteElement;
 import wfg.native_ui.ui.widget.Button;
@@ -61,17 +61,18 @@ public final class MarkerPresetDialog extends DialogPanel {
         final Button createBtn = new CreatePresetButton();
         add(createBtn).inTL(hpad, hpad);
         
-        final TooltipMakerAPI container = ComponentFactory.createTooltip(PANEL_W - 60, true);
+        final UIContainerAPI content = new UIContainer(PANEL_W - 60, 0f);
 
         float yCoord = 0f;
         for (ItemMarkerPreset preset : PresetConfig.getPlansCopy()) {
             final PresetWidget widget = new PresetWidget(preset);
-            container.addCustom(widget, 0f).getPosition().inTL(opad, yCoord);
+            content.add(widget).inTL(opad, yCoord);
             yCoord += WIDGET_H + hpad;
         }
 
-        container.setHeightSoFar(yCoord);
-        ComponentFactory.addTooltip(container, yCoord, LMBOutsideCancels, this).inBL(0f, 0f);
+        content.setHeight(yCoord);
+        final float contentHeight = PANEL_H - hpad*2 - createBtn.getHeight();
+        add(ComponentFactory.wrapWithScrollPanel(content, content.getWidth(), contentHeight)).inBL(0f, 0f);
     }
 
     public final class CreatePresetButton extends Button {
@@ -102,7 +103,7 @@ public final class MarkerPresetDialog extends DialogPanel {
         private static final int PANEL_W = MarkerPresetDialog.PANEL_W - opad * 2;
         private static final HashSet<String> allMarkerIds = new HashSet<>(ItemMarker.getAllMarkers().size());
 
-        public static final BorderRenderer border = new BorderRenderer(UI_BORDER_4, true, PANEL_W, WIDGET_H);
+        private static final BorderRenderer border = new BorderRenderer(UI_BORDER_4, true, PANEL_W, WIDGET_H);
 
         static {
             for (ItemMarker marker : ItemMarker.getAllMarkers()) {

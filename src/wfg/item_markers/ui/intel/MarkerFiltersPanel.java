@@ -17,14 +17,12 @@ import com.fs.starfarer.api.loading.WingRole;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TextFieldAPI;
-import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
 
 import wfg.item_markers.item.MarkerFilters;
 import wfg.item_markers.item.MarkerType;
 import wfg.item_markers.item.MarkerFilters.ActiveFilters;
 import wfg.native_ui.internal.ui.core.UIContainer;
-import wfg.native_ui.ui.ComponentFactory;
 import wfg.native_ui.ui.core.UIBuildableAPI;
 import wfg.native_ui.ui.widget.Button;
 import wfg.native_ui.ui.widget.MultiSelect;
@@ -46,16 +44,14 @@ public class MarkerFiltersPanel extends UIContainer {
         super(MarkerManagmentPanel.MAIN_PANEL_W, (int) (MarkerManagmentPanel.MAIN_PANEL_H * 0.33f));
 
         this.target = target;
-
-        final TooltipMakerAPI uiBuilder = ComponentFactory.createTooltip(nameFieldW, false);
         
-        nameField = uiBuilder.addTextField(nameFieldW, btnH, Fonts.DEFAULT_SMALL, pad);
-        nameField.setText(MarkerFilters.searchQuery);
+        nameField = settings.createTextField(MarkerFilters.searchQuery, Fonts.DEFAULT_SMALL);
+        nameField.getPosition().setSize(nameFieldW, btnH);
         nameField.setMaxChars(30);
         nameField.setLimitByStringWidth(true);
         nameField.setUndoOnEscape(true);
         nameField.getPosition().inBL(0f, 0f);
-        ComponentFactory.addTooltip(uiBuilder, btnH, false, this).inTL(pad, pad);
+        add(nameField).inTL(pad, pad);
 
         final RadioPanel activeFilterButtons = new RadioPanel(btnW*3 + opad*2, btnH, LayoutMode.HORIZONTAL)
             .addOption("All", MarkerFilters.activeFilter == ActiveFilters.ALL)
@@ -70,10 +66,10 @@ public class MarkerFiltersPanel extends UIContainer {
             btn.setHighlightBrightness(0f);
             btn.bgColor = nearBlack;
         }
-        add(activeFilterButtons).rightOfBottom(uiBuilder, opad);
+        add(activeFilterButtons).rightOfBottom(nameField, opad);
 
         final LabelAPI typeLbl = settings.createLabel("Type", Fonts.ORBITRON_16);
-        add(typeLbl).belowLeft(uiBuilder, opad);
+        add(typeLbl).belowLeft(nameField, opad);
 
         final MultiSelect typeFilterButtons = new MultiSelect(btnW*6 + opad*4, btnH, MarkerType.getLabels(), LayoutMode.HORIZONTAL);
         typeFilterButtons.onSelected = (button) -> {
