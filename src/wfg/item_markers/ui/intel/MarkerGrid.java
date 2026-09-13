@@ -18,7 +18,7 @@ import wfg.item_markers.item.MarkerFilters.ActiveFilters;
 import wfg.item_markers.serializable.ItemMarkersMap;
 import wfg.native_ui.ui.table.GridTable;
 
-public class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
+public final class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
 
     public MarkerGrid() {
         super(MarkerManagmentPanel.MAIN_PANEL_W, (int) (MarkerManagmentPanel.MAIN_PANEL_H * 0.67f),

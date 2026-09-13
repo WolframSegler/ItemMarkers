@@ -8,7 +8,7 @@ import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.core.UIBuildableAPI;
 import wfg.native_ui.ui.widget.Button;
 
-public class MarkerManagmentPanel extends UIContainer implements UIBuildableAPI {
+public final class MarkerManagmentPanel extends UIContainer implements UIBuildableAPI {
     protected static final int MAIN_PANEL_W = 1250;
     protected static final int MAIN_PANEL_H = screenH - 140;
 

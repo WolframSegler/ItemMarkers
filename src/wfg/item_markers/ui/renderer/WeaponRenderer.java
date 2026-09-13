@@ -13,7 +13,7 @@ package wfg.item_markers.ui.renderer;
 // import com.fs.starfarer.api.loading.WeaponSpecAPI;
 
 // TODO maybe use in the future
-public class WeaponRenderer {
+public final class WeaponRenderer {
     // private Sprite hardPointSprite;
     // private Sprite hardPointUnderSprite;
     // private Sprite \u00d5\u00d2\u00d8o00;

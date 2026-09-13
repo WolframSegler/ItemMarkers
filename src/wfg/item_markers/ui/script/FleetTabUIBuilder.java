@@ -25,7 +25,7 @@ import wfg.native_ui.ui.MethodFields;
 import wfg.native_ui.ui.util.IdentityMarker;
 import wfg.native_ui.ui.visual.AbstractSpriteElement.SpriteElement;
 
-public class FleetTabUIBuilder implements CoreTabUIBuilder {
+public final class FleetTabUIBuilder implements CoreTabUIBuilder {
 
     @SuppressWarnings("unchecked")
     public void advance(float delta) {

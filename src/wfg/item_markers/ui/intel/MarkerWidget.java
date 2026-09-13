@@ -32,7 +32,7 @@ import wfg.native_ui.ui.visual.AbstractSpriteElement.SpriteElement;
 import wfg.native_ui.util.NativeUiUtils;
 import wfg.native_ui.util.RenderUtils;
 
-public class MarkerWidget extends UIClickable<MarkerWidget> implements WidgetAPI<MarkerWidget>,
+public final class MarkerWidget extends UIClickable<MarkerWidget> implements WidgetAPI<MarkerWidget>,
     HasAudioFeedback, HasHoverGlow
 {
     private static final Color WIDGET_BG = new Color(28, 35, 48, 240);

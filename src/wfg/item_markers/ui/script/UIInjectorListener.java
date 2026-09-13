@@ -5,7 +5,7 @@ import com.fs.starfarer.api.campaign.CoreUITabId;
 import com.fs.starfarer.api.campaign.SectorAPI;
 import com.fs.starfarer.api.campaign.listeners.CoreUITabListener;
 
-public class UIInjectorListener implements CoreUITabListener {
+public final class UIInjectorListener implements CoreUITabListener {
     
     @Override
     public void reportAboutToOpenCoreTab(CoreUITabId tabID, Object param) {
