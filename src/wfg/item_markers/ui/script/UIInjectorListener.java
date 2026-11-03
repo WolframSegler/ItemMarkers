@@ -5,6 +5,8 @@ import com.fs.starfarer.api.campaign.CoreUITabId;
 import com.fs.starfarer.api.campaign.SectorAPI;
 import com.fs.starfarer.api.campaign.listeners.CoreUITabListener;
 
+import wfg.utils.ui.CoreTabUIBuilder;
+
 public final class UIInjectorListener implements CoreUITabListener {
     
     @Override

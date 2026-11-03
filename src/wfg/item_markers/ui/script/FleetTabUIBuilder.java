@@ -24,6 +24,7 @@ import wfg.native_ui.ui.Attachments;
 import wfg.native_ui.ui.MethodFields;
 import wfg.native_ui.ui.util.IdentityMarker;
 import wfg.native_ui.ui.visual.AbstractSpriteElement.SpriteElement;
+import wfg.utils.ui.CoreTabUIBuilder;
 
 public final class FleetTabUIBuilder implements CoreTabUIBuilder {
 
@@ -51,7 +52,7 @@ public final class FleetTabUIBuilder implements CoreTabUIBuilder {
                 for (FleetMemberAPI member : submarket.getCargo().getMothballedShips().getMembersListCopy()) {
                     if (activeMarkers.containsKey(member.getHullSpec().getBaseHullId())) {
                         final SpriteElement icon = new SpriteElement(20, 20, Sprites.MARKER, null, null);
-                        marketPicker.addComponent(icon).rightOfTop(btn, -16);
+                        icon.attachTo(marketPicker).rightOfTop(btn, -16);
                         break;
                     }
                 }
@@ -89,11 +90,11 @@ public final class FleetTabUIBuilder implements CoreTabUIBuilder {
 
             if (!activeMarkers.containsKey(member.getHullSpec().getBaseHullId())) continue;
             final SpriteElement icon = new SpriteElement(20, 20, Sprites.MARKER, null, null);
-            widget.addComponent(icon).inBL(pad, 70);
+            icon.attachTo(widget).inBL(pad, 70);
 
             if (VisualConfig.HIGHLIGHT_FRAME_ALPHA > 0f) {
                 final SpriteElement hue = new SpriteElement(widget.getPosition().getWidth(), widget.getPosition().getHeight(), Sprites.HUE_FRAME, null, null);
-                widget.addComponent(hue).inBL(0f, 0f);
+                hue.attachTo(widget).inBL(0f, 0f);
                 hue.texColor = new Color(1f, 1f, 1f, VisualConfig.HIGHLIGHT_FRAME_ALPHA);
             }
         }

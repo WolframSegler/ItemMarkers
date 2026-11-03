@@ -7,6 +7,7 @@ import com.fs.starfarer.api.ui.Fonts;
 import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.core.UIBuildableAPI;
 import wfg.native_ui.ui.widget.Button;
+import wfg.native_ui.ui.widget.Button.CutStyle;
 
 public final class MarkerManagmentPanel extends UIContainer implements UIBuildableAPI {
     protected static final int MAIN_PANEL_W = 1250;
@@ -28,7 +29,8 @@ public final class MarkerManagmentPanel extends UIContainer implements UIBuildab
         final MarkerFiltersPanel filter = new MarkerFiltersPanel(grid);
         add(filter).inTL(0f, 0f);
 
-        final Button presetBtn = new Button(150, 28, "Manage Presets", Fonts.INSIGNIA_LARGE, (btn) -> new MarkerPresetDialog(grid));
+        final Button presetBtn = new Button(150, 28, "Manage Presets", null, (btn) -> new MarkerPresetDialog(grid).show(0.3f, 0.3f));
+        presetBtn.setCutStyle(CutStyle.TL_BR);
         add(presetBtn).aboveRight(grid, pad*2);
     }
 }

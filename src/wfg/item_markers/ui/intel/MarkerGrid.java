@@ -25,9 +25,9 @@ public final class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
             VisualConfig.getWidgetW(), VisualConfig.getWidgetH(), opad
         );
 
-        uniformOuterGap = true;
-        justifyGrid = true;
-        isSelectionEnabled = true;
+        mUniformOuterGap = true;
+        mJustifyGrid = true;
+        mIsSelectionEnabled = true;
         
         buildUI();
     }
@@ -38,7 +38,7 @@ public final class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
         
         final LabelAPI countLbl = settings.createLabel(getDataList().size() + " entries", Fonts.DEFAULT_SMALL);
         countLbl.setColor(gray);
-        add(countLbl).inTL(opad, -pad);
+        add(countLbl).inTL(opad, -opad);
     }
 
     protected final List<ItemMarker> getDataList() {
