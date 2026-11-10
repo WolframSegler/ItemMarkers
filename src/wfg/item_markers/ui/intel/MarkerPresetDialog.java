@@ -27,7 +27,7 @@ import wfg.item_markers.serializable.ItemMarkersMap;
 import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.internal.util.BorderRenderer;
 import wfg.native_ui.ui.component.InteractionComp;
-import wfg.native_ui.ui.component.HoverGlowComp.GlowType;
+import wfg.native_ui.ui.component.GlowComp.GlowType;
 import wfg.native_ui.ui.dialog.DialogPanel;
 import wfg.native_ui.ui.table.ListTable;
 import wfg.native_ui.ui.table.WidgetAPI;

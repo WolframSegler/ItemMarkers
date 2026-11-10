@@ -18,13 +18,13 @@ import wfg.item_markers.config.VisualConfig;
 import wfg.item_markers.item.ItemMarker;
 import wfg.native_ui.internal.util.BorderRenderer;
 import wfg.native_ui.ui.component.AudioFeedbackComp;
-import wfg.native_ui.ui.component.HoverGlowComp;
-import wfg.native_ui.ui.component.HoverGlowComp.GlowType;
+import wfg.native_ui.ui.component.GlowComp;
+import wfg.native_ui.ui.component.GlowComp.GlowType;
 import wfg.native_ui.ui.component.InteractionComp;
 import wfg.native_ui.ui.component.NativeComponents;
 import wfg.native_ui.ui.core.UIElementAPI;
 import wfg.native_ui.ui.core.UIElementFlags.HasAudioFeedback;
-import wfg.native_ui.ui.core.UIElementFlags.HasHoverGlow;
+import wfg.native_ui.ui.core.UIElementFlags.HasGlow;
 import wfg.native_ui.ui.interaction.UIClickable;
 import wfg.native_ui.ui.table.WidgetAPI;
 import wfg.native_ui.ui.visual.InteractiveSprite;
@@ -33,14 +33,14 @@ import wfg.native_ui.util.NativeUiUtils;
 import wfg.native_ui.util.RenderUtils;
 
 public final class MarkerWidget extends UIClickable<MarkerWidget> implements WidgetAPI<MarkerWidget>,
-    HasAudioFeedback, HasHoverGlow
+    HasAudioFeedback, HasGlow
 {
     private static final Color WIDGET_BG = new Color(28, 35, 48, 240);
     private static final Color WIDGET_BG_SELECTED = new Color(46, 125, 50);
     public static final BorderRenderer border = new BorderRenderer(UI_BORDER_3, true, VisualConfig.getWidgetW(), VisualConfig.getWidgetH());
 
     private final AudioFeedbackComp audio = comp().get(NativeComponents.AUDIO_FEEDBACK);
-    private final HoverGlowComp glow = comp().get(NativeComponents.HOVER_GLOW);
+    private final GlowComp glow = comp().get(NativeComponents.GLOW);
 
     public final ItemMarker data;
 
@@ -53,7 +53,7 @@ public final class MarkerWidget extends UIClickable<MarkerWidget> implements Wid
 
         glow.type = GlowType.UNDERLAY;
         glow.glowBrightness = 1.2f;
-        glow.flashBrightness = 1.8f;
+        glow.flashBrightness = 0.4f;
         glow.color = base;
 
         buildUI();
@@ -80,11 +80,10 @@ public final class MarkerWidget extends UIClickable<MarkerWidget> implements Wid
             final InteractiveSprite interactiveIcon = new InteractiveSprite(scaledW, scaledH, sprite, null, null);
             interactiveIcon.tooltip.enabled = false;
             interactiveIcon.audio.enabled = false;
-            interactiveIcon.glow.isFaderOwner = false;
-            interactiveIcon.glow.fader = glow.fader;
+            interactiveIcon.glow.setOwner(glow);
             interactiveIcon.glow.type = GlowType.ADDITIVE;
-            interactiveIcon.glow.glowBrightness = 0.8f;
-            interactiveIcon.glow.flashBrightness = 1.2f;
+            interactiveIcon.glow.glowBrightness = 0.7f;
+            interactiveIcon.glow.flashBrightness = 0.3f;
             icon = interactiveIcon;
         }
 
