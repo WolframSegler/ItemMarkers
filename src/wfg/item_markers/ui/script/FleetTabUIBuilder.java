@@ -50,7 +50,8 @@ public final class FleetTabUIBuilder implements CoreTabUIBuilder {
     
                 submarket.getCargo().initMothballedShips(submarket.getFaction().getId());
                 for (FleetMemberAPI member : submarket.getCargo().getMothballedShips().getMembersListCopy()) {
-                    if (activeMarkers.containsKey(member.getHullSpec().getBaseHullId())) {
+                    final ItemMarker marker = activeMarkers.get(member.getHullSpec().getBaseHullId());
+                    if (marker != null && marker.shouldHighlight()) {
                         final SpriteElement icon = new SpriteElement(20, 20, Sprites.MARKER, null, null);
                         icon.attachTo(marketPicker).rightOfTop(btn, -16);
                         break;
@@ -88,7 +89,8 @@ public final class FleetTabUIBuilder implements CoreTabUIBuilder {
 
             final FleetMemberAPI member = (FleetMember) RolfLectionUtil.getMethodAndInvokeDirectly("getMember", widget);
 
-            if (!activeMarkers.containsKey(member.getHullSpec().getBaseHullId())) continue;
+            final ItemMarker marker = activeMarkers.get(member.getHullSpec().getBaseHullId());
+            if (marker == null || !marker.shouldHighlight()) continue;
             final SpriteElement icon = new SpriteElement(20, 20, Sprites.MARKER, null, null);
             icon.attachTo(widget).inBL(pad, 70);
 

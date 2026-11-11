@@ -57,7 +57,8 @@ public final class CargoTabUIBuilder implements CoreTabUIBuilder {
                 if (IdentityMarker.isPresent(view)) continue;
                 IdentityMarker.attach(view);
 
-                if (!activeMarkers.containsKey(getStackId(view.getStack()))) continue;
+                final ItemMarker marker = activeMarkers.get(getStackId(view.getStack()));
+                if (marker == null || !marker.shouldHighlight()) continue;
                 final SpriteElement icon = new SpriteElement(20, 20, Sprites.MARKER, null, null);
                 
                 icon.attachTo(view);
@@ -92,7 +93,8 @@ public final class CargoTabUIBuilder implements CoreTabUIBuilder {
             final CargoAPI cargo = ((SubmarketAPI)btn.getCustomData()).getCargo();
 
             for (CargoStackAPI stack : cargo.getStacksCopy()) {
-                if (activeMarkers.containsKey(getStackId(stack))) {
+                final ItemMarker marker = activeMarkers.get(getStackId(stack));
+                if (marker != null && marker.shouldHighlight()) {
                     final SpriteElement icon = new SpriteElement(20, 20, Sprites.MARKER, null, null);
                     icon.attachTo(marketPicker).rightOfTop(btn, -16);
                     break;
