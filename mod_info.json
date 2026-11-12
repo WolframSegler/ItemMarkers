@@ -4,7 +4,7 @@
 	"author":"WolframSegler",
 	"version": "0.2.0",
 	"description":"Add markers to wanted items or ships too see them at a glance.",
-	"gameVersion":"0.98a-RC8",
+	"gameVersion":"0.98.5a-RC4",
 	"utility": true,
 	"jars": [
         "jars/main/item_markers.jar"

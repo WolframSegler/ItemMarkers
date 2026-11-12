@@ -24,7 +24,6 @@ import wfg.item_markers.item.ItemMarker;
 import wfg.item_markers.serializable.ItemMarkersMap;
 import wfg.item_markers.ui.Sprites;
 import wfg.native_ui.ui.Attachments;
-import wfg.native_ui.ui.MethodFields;
 import wfg.native_ui.ui.util.IdentityMarker;
 import wfg.native_ui.ui.visual.AbstractSpriteElement.SpriteElement;
 import wfg.utils.ui.CoreTabUIBuilder;
@@ -52,7 +51,7 @@ public final class CargoTabUIBuilder implements CoreTabUIBuilder {
             "getCargoDataView", entityCargoDisplay);
 
         final HashMap<String, ItemMarker> activeMarkers = ItemMarkersMap.instance().activeMarkers;
-        for (UIComponentAPI child : MethodFields.getChildrenNonCopy(grid)) {
+        for (UIComponentAPI child : grid.getChildrenCopy2()) {
             if (child instanceof CargoStackView view) {
                 if (IdentityMarker.isPresent(view)) continue;
                 IdentityMarker.attach(view);
@@ -78,8 +77,7 @@ public final class CargoTabUIBuilder implements CoreTabUIBuilder {
             }
         }
 
-        final UIPanelAPI marketPicker = (UIPanelAPI) MethodFields
-            .getChildrenNonCopy(tradePanel).stream()
+        final UIPanelAPI marketPicker = (UIPanelAPI) tradePanel.getChildrenCopy2().stream()
             .filter(c -> RolfLectionUtil.hasMethodOfName("freezeOpenTab", c))
             .findFirst().orElse(null);
         if (marketPicker == null || IdentityMarker.isPresent(marketPicker)) return;

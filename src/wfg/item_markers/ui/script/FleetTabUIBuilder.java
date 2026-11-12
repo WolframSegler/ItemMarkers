@@ -21,7 +21,6 @@ import wfg.item_markers.item.ItemMarker;
 import wfg.item_markers.serializable.ItemMarkersMap;
 import wfg.item_markers.ui.Sprites;
 import wfg.native_ui.ui.Attachments;
-import wfg.native_ui.ui.MethodFields;
 import wfg.native_ui.ui.util.IdentityMarker;
 import wfg.native_ui.ui.visual.AbstractSpriteElement.SpriteElement;
 import wfg.utils.ui.CoreTabUIBuilder;
@@ -66,7 +65,7 @@ public final class FleetTabUIBuilder implements CoreTabUIBuilder {
         final String buyVerb = submarket.getPlugin().getBuyVerb();
 
         boolean isInBuyMode = false;
-        for (UIComponentAPI panel : MethodFields.getChildrenNonCopy(masterTab)) {
+        for (UIComponentAPI panel : masterTab.getChildrenCopy2()) {
             if (panel instanceof ButtonAPI button && button.getText().startsWith(buyVerb) && button.isHighlighted()) {
                 isInBuyMode = true;
                 break;
