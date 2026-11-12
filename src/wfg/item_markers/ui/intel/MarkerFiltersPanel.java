@@ -30,7 +30,7 @@ import wfg.native_ui.ui.widget.RadioPanel;
 import wfg.native_ui.ui.widget.RadioPanel.LayoutMode;
 import wfg.native_ui.util.NativeUiUtils;
 
-public class MarkerFiltersPanel extends UIContainer {
+public final class MarkerFiltersPanel extends UIContainer {
     private static final int nameFieldW = 192;
     private static final int btnH = 24;
     private static final int btnW = 100;

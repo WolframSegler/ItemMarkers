@@ -18,16 +18,16 @@ import wfg.item_markers.item.MarkerFilters.ActiveFilters;
 import wfg.item_markers.serializable.ItemMarkersMap;
 import wfg.native_ui.ui.table.GridTable;
 
-public class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
+public final class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
 
     public MarkerGrid() {
         super(MarkerManagmentPanel.MAIN_PANEL_W, (int) (MarkerManagmentPanel.MAIN_PANEL_H * 0.67f),
             VisualConfig.getWidgetW(), VisualConfig.getWidgetH(), opad
         );
 
-        uniformOuterGap = true;
-        justifyGrid = true;
-        isSelectionEnabled = true;
+        mUniformOuterGap = true;
+        mJustifyGrid = true;
+        mIsSelectionEnabled = true;
         
         buildUI();
     }
@@ -38,7 +38,7 @@ public class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
         
         final LabelAPI countLbl = settings.createLabel(getDataList().size() + " entries", Fonts.DEFAULT_SMALL);
         countLbl.setColor(gray);
-        add(countLbl).inTL(opad, -pad);
+        add(countLbl).inTL(opad, -opad);
     }
 
     protected final List<ItemMarker> getDataList() {

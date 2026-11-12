@@ -24,11 +24,11 @@ import wfg.item_markers.item.ItemMarker;
 import wfg.item_markers.serializable.ItemMarkersMap;
 import wfg.item_markers.ui.Sprites;
 import wfg.native_ui.ui.Attachments;
-import wfg.native_ui.ui.MethodFields;
 import wfg.native_ui.ui.util.IdentityMarker;
 import wfg.native_ui.ui.visual.AbstractSpriteElement.SpriteElement;
+import wfg.utils.ui.CoreTabUIBuilder;
 
-public class CargoTabUIBuilder implements CoreTabUIBuilder {
+public final class CargoTabUIBuilder implements CoreTabUIBuilder {
 
     @Override
     @SuppressWarnings("unchecked")
@@ -51,32 +51,33 @@ public class CargoTabUIBuilder implements CoreTabUIBuilder {
             "getCargoDataView", entityCargoDisplay);
 
         final HashMap<String, ItemMarker> activeMarkers = ItemMarkersMap.instance().activeMarkers;
-        for (UIComponentAPI child : MethodFields.getChildrenNonCopy(grid)) {
+        for (UIComponentAPI child : grid.getChildrenCopy2()) {
             if (child instanceof CargoStackView view) {
                 if (IdentityMarker.isPresent(view)) continue;
                 IdentityMarker.attach(view);
 
-                if (!activeMarkers.containsKey(getStackId(view.getStack()))) continue;
+                final ItemMarker marker = activeMarkers.get(getStackId(view.getStack()));
+                if (marker == null || !marker.shouldHighlight()) continue;
                 final SpriteElement icon = new SpriteElement(20, 20, Sprites.MARKER, null, null);
                 
+                icon.attachTo(view);
                 switch (VisualConfig.CARGO_MARKER_POSITION) {
-                    default -> view.addComponent(icon).inTL(pad, pad);
-                    case TL -> view.addComponent(icon).inTL(pad, pad);
-                    case TR -> view.addComponent(icon).inTR(pad, pad);
-                    case BL -> view.addComponent(icon).inBL(pad, pad);
-                    case BR -> view.addComponent(icon).inBR(pad, pad);
+                    default -> icon.pos().inTL(pad, pad);
+                    case TL -> icon.pos().inTL(pad, pad);
+                    case TR -> icon.pos().inTR(pad, pad);
+                    case BL -> icon.pos().inBL(pad, pad);
+                    case BR -> icon.pos().inBR(pad, pad);
                 }
 
                 if (VisualConfig.HIGHLIGHT_FRAME_ALPHA > 0f) {
                     final SpriteElement hue = new SpriteElement(view.getWidth(), view.getHeight(), Sprites.HUE_FRAME, null, null);
-                    view.addComponent(hue).inBL(0f, 0f);
+                    hue.attachTo(view).inBL(0f, 0f);
                     hue.texColor = new Color(1f, 1f, 1f, VisualConfig.HIGHLIGHT_FRAME_ALPHA);
                 }
             }
         }
 
-        final UIPanelAPI marketPicker = (UIPanelAPI) MethodFields
-            .getChildrenNonCopy(tradePanel).stream()
+        final UIPanelAPI marketPicker = (UIPanelAPI) tradePanel.getChildrenCopy2().stream()
             .filter(c -> RolfLectionUtil.hasMethodOfName("freezeOpenTab", c))
             .findFirst().orElse(null);
         if (marketPicker == null || IdentityMarker.isPresent(marketPicker)) return;
@@ -90,9 +91,10 @@ public class CargoTabUIBuilder implements CoreTabUIBuilder {
             final CargoAPI cargo = ((SubmarketAPI)btn.getCustomData()).getCargo();
 
             for (CargoStackAPI stack : cargo.getStacksCopy()) {
-                if (activeMarkers.containsKey(getStackId(stack))) {
+                final ItemMarker marker = activeMarkers.get(getStackId(stack));
+                if (marker != null && marker.shouldHighlight()) {
                     final SpriteElement icon = new SpriteElement(20, 20, Sprites.MARKER, null, null);
-                    marketPicker.addComponent(icon).rightOfTop(btn, -16);
+                    icon.attachTo(marketPicker).rightOfTop(btn, -16);
                     break;
                 }
             }

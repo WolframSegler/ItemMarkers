@@ -11,7 +11,7 @@ import com.fs.starfarer.api.combat.ShipAPI.HullSize;
 import com.fs.starfarer.api.combat.WeaponAPI.WeaponSize;
 import com.fs.starfarer.api.loading.WingRole;
 
-public class MarkerFilters {
+public final class MarkerFilters {
     private MarkerFilters() {};
     public static final String OTHER_STRING = "Other";
     public static final Set<String> EXPLICIT_MANUFACTURERS = new HashSet<>(Arrays.asList("Low Tech", "Midline", "High Tech", "Pirate", "Luddic Path"));

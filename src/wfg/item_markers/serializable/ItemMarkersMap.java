@@ -1,6 +1,5 @@
 package wfg.item_markers.serializable;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -8,8 +7,8 @@ import com.fs.starfarer.api.Global;
 
 import wfg.item_markers.item.ItemMarker;
 
-public class ItemMarkersMap implements Serializable {
-    private ItemMarkersMap() {}
+public final class ItemMarkersMap {
+    private ItemMarkersMap() {};
     private static final String ItemMarkersSerialID = "item_markers_save_data_id";
     private static ItemMarkersMap instance;
 

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.SpecialItemSpecAPI;
 import com.fs.starfarer.api.campaign.econ.CommoditySpecAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
@@ -18,7 +20,7 @@ import com.fs.starfarer.api.loading.FighterWingSpecAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 
-public class ItemMarker {
+public final class ItemMarker {
     private static final List<ItemMarker> allMarkers = new ArrayList<>(384);
     static {
         for (CommoditySpecAPI spec : settings.getAllCommoditySpecs()) {
@@ -93,8 +95,20 @@ public class ItemMarker {
         };
     }
 
+    public final boolean shouldHighlight() {
+        return isActive && !isKnownToPlayer();
+    }
+
+    private final boolean isKnownToPlayer() {
+        return switch (type) {
+            case MOD_SPEC -> Global.getSector().getCharacterData().knowsHullMod(itemID);
+            case SPECIAL_ITEM -> isBlueprintPackageFullyKnown(itemID);
+            default -> false;
+        };
+    }
+
     @Override
-    public String toString() {
+    public final String toString() {
         return itemID + " [" + type.label + "]";
     }
 
@@ -104,5 +118,35 @@ public class ItemMarker {
 
     public static final List<ItemMarker> getAllMarkers() {
         return allMarkers;
+    }
+
+    /**
+     * Only {@link Items#TAG_BLUEPRINT_PACKAGE} specs are considered.
+     */
+    private static final boolean isBlueprintPackageFullyKnown(String specialId) {
+        final SpecialItemSpecAPI spec = settings.getSpecialItemSpec(specialId);
+        if (!spec.hasTag(Items.TAG_BLUEPRINT_PACKAGE)) return false;
+
+        final String packageTag = spec.getParams();
+        if (packageTag == null || packageTag.isEmpty()) return false;
+
+        final FactionAPI player = Global.getSector().getPlayerFaction();
+
+        for (ShipHullSpecAPI hull : settings.getAllShipHullSpecs()) {
+            if (!hull.hasTag(packageTag)) continue;
+            if (!player.getKnownShips().contains(hull.getHullId())) return false;
+        }
+
+        for (WeaponSpecAPI weapon : settings.getAllWeaponSpecs()) {
+            if (!weapon.hasTag(packageTag)) continue;
+            if (!player.getKnownWeapons().contains(weapon.getWeaponId())) return false;
+        }
+
+        for (FighterWingSpecAPI fighter : settings.getAllFighterWingSpecs()) {
+            if (!fighter.hasTag(packageTag)) continue;
+            if (!player.getKnownFighters().contains(fighter.getId())) return false;
+        }
+
+        return true;
     }
 }
