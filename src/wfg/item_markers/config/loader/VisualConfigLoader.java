@@ -40,6 +40,7 @@ public class VisualConfigLoader {
             VisualConfig.ITEM_FILTER_WIDGET_SCALAR = getItemFilterWidgetScalar(root.getString("ITEM_FILTER_WIDGET_SCALAR"));
             VisualConfig.SIMPLE_WIDGET_BORDER = root.getBoolean("SIMPLE_WIDGET_BORDER");
             VisualConfig.SIMPLE_WIDGET_ICON = root.getBoolean("SIMPLE_WIDGET_ICON");
+            VisualConfig.UPDATE_MARKER_POSITION_EVERY_FRAME = root.getBoolean("UPDATE_MARKER_POSITION_EVERY_FRAME");
 
             if (settings.getModManager().isModEnabled(LUNA_LIB)) {
                 loadFromLunaSettings();
@@ -56,6 +57,7 @@ public class VisualConfigLoader {
         VisualConfig.ITEM_FILTER_WIDGET_SCALAR = getItemFilterWidgetScalar(LunaSettings.getString(ITEM_MARKERS, "ITEM_FILTER_WIDGET_SCALAR"));
         VisualConfig.SIMPLE_WIDGET_BORDER = LunaSettings.getBoolean(ITEM_MARKERS, "SIMPLE_WIDGET_BORDER");
         VisualConfig.SIMPLE_WIDGET_ICON = LunaSettings.getBoolean(ITEM_MARKERS, "SIMPLE_WIDGET_ICON");
+        VisualConfig.UPDATE_MARKER_POSITION_EVERY_FRAME = LunaSettings.getBoolean(ITEM_MARKERS, "UPDATE_MARKER_POSITION_EVERY_FRAME");
     }
 
     private static final float getItemFilterWidgetScalar(final String size) {

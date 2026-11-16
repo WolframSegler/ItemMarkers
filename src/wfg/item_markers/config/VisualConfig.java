@@ -16,6 +16,7 @@ public class VisualConfig {
     public static float ITEM_FILTER_WIDGET_SCALAR;
     public static boolean SIMPLE_WIDGET_BORDER;
     public static boolean SIMPLE_WIDGET_ICON;
+    public static boolean UPDATE_MARKER_POSITION_EVERY_FRAME;
 
     public static int getWidgetW() { return (int) (WIDTH * ITEM_FILTER_WIDGET_SCALAR); }
     public static int getWidgetH() { return (int) (HEIGHT * ITEM_FILTER_WIDGET_SCALAR); }
