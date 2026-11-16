@@ -19,6 +19,7 @@ import rolflectionlib.util.RolfLectionUtil;
 import wfg.item_markers.config.VisualConfig;
 import wfg.item_markers.item.ItemMarker;
 import wfg.item_markers.serializable.ItemMarkersMap;
+import wfg.item_markers.ui.MarkerIcon;
 import wfg.item_markers.ui.Sprites;
 import wfg.native_ui.ui.Attachments;
 import wfg.native_ui.ui.util.IdentityMarker;
@@ -51,7 +52,7 @@ public final class FleetTabUIBuilder implements CoreTabUIBuilder {
                 for (FleetMemberAPI member : submarket.getCargo().getMothballedShips().getMembersListCopy()) {
                     final ItemMarker marker = activeMarkers.get(member.getHullSpec().getBaseHullId());
                     if (marker != null && marker.shouldHighlight()) {
-                        final SpriteElement icon = new SpriteElement(20, 20, Sprites.MARKER, null, null);
+                        final MarkerIcon icon = new MarkerIcon();
                         icon.attachTo(marketPicker).rightOfTop(btn, -16);
                         break;
                     }
@@ -90,7 +91,7 @@ public final class FleetTabUIBuilder implements CoreTabUIBuilder {
 
             final ItemMarker marker = activeMarkers.get(member.getHullSpec().getBaseHullId());
             if (marker == null || !marker.shouldHighlight()) continue;
-            final SpriteElement icon = new SpriteElement(20, 20, Sprites.MARKER, null, null);
+            final MarkerIcon icon = new MarkerIcon();
             icon.attachTo(widget).inBL(pad, 70);
 
             if (VisualConfig.HIGHLIGHT_FRAME_ALPHA > 0f) {

@@ -22,6 +22,7 @@ import rolflectionlib.util.RolfLectionUtil;
 import wfg.item_markers.config.VisualConfig;
 import wfg.item_markers.item.ItemMarker;
 import wfg.item_markers.serializable.ItemMarkersMap;
+import wfg.item_markers.ui.MarkerIcon;
 import wfg.item_markers.ui.Sprites;
 import wfg.native_ui.ui.Attachments;
 import wfg.native_ui.ui.util.IdentityMarker;
@@ -58,7 +59,7 @@ public final class CargoTabUIBuilder implements CoreTabUIBuilder {
 
                 final ItemMarker marker = activeMarkers.get(getStackId(view.getStack()));
                 if (marker == null || !marker.shouldHighlight()) continue;
-                final SpriteElement icon = new SpriteElement(20, 20, Sprites.MARKER, null, null);
+                final MarkerIcon icon = new MarkerIcon();
                 
                 icon.attachTo(view);
                 switch (VisualConfig.CARGO_MARKER_POSITION) {
@@ -93,7 +94,7 @@ public final class CargoTabUIBuilder implements CoreTabUIBuilder {
             for (CargoStackAPI stack : cargo.getStacksCopy()) {
                 final ItemMarker marker = activeMarkers.get(getStackId(stack));
                 if (marker != null && marker.shouldHighlight()) {
-                    final SpriteElement icon = new SpriteElement(20, 20, Sprites.MARKER, null, null);
+                    final MarkerIcon icon = new MarkerIcon();
                     icon.attachTo(marketPicker).rightOfTop(btn, -16);
                     break;
                 }

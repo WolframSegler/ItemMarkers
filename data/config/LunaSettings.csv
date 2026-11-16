@@ -4,3 +4,4 @@ HIGHLIGHT_FRAME_ALPHA,Highlight Frame Opacity,Double,0.7,,Determines how pronoun
 ITEM_FILTER_WIDGET_SCALAR,Filter Widget Size,Radio,MEDIUM,"TINY, SMALL, MEDIUM, LARGE, HUGE",Determines the size of the item widgets inside the markers tab.,,,Visual
 SIMPLE_WIDGET_BORDER,Simple Widget Border,Boolean,false,,Determines whether if a simplified widget border will be used. Useful for performance.,,,Visual
 SIMPLE_WIDGET_ICON,Simple Widget Icon,Boolean,false,,Determines whether if a simplified icon will be used. Useful for performance.,,,Visual
+UPDATE_MARKER_POSITION_EVERY_FRAME,Update Marker Position Every Frame,Boolean,false,,Updates the position of all marker icons for cross-mod compatibility. Might have a performance impact.,,,Visual
