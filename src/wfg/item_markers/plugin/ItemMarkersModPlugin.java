@@ -10,7 +10,6 @@ import lunalib.lunaSettings.LunaSettings;
 import wfg.item_markers.config.loader.ConfigLunaSettingsListener;
 import wfg.item_markers.serializable.ItemMarkersMap;
 import wfg.item_markers.ui.script.UIInjectorListener;
-import wfg.utils.ui.UIHierarchyTree;
 
 public final class ItemMarkersModPlugin extends BaseModPlugin {
 
@@ -26,8 +25,6 @@ public final class ItemMarkersModPlugin extends BaseModPlugin {
         ItemMarkersMap.loadInstance();
 
         Global.getSector().getListenerManager().addListener(new UIInjectorListener(), true);
-
-        new UIHierarchyTree();
     }
 
     @Override
