@@ -168,10 +168,12 @@ public final class MarkerPresetDialog extends DialogPanel {
             final Button deleteBtn = new DeleteButton(this);
             final Button renameBtn = new RenameButton(this);
             final Button applyBtn = new ApplyButton(this);
+            final Button mergeButton = new MergeButton(this);
 
             add(deleteBtn).inTR(opad, opad);
             add(renameBtn).leftOfMid(deleteBtn, opad);
             add(applyBtn).inBR(opad, opad);
+            add(mergeButton).leftOfMid(applyBtn, opad);
         }
 
         @Override
@@ -256,17 +258,8 @@ public final class MarkerPresetDialog extends DialogPanel {
             lastText = titleText;
 
             final boolean isBlank = titleText.isEmpty();
-            boolean duplicate = false;
-            if (!isBlank) {
-                for (ItemMarkerPreset preset : PresetConfig.map.values()) {
-                    if (!preset.equals(mWidget.mPreset) && preset.id.equals(titleText)) {
-                        duplicate = true;
-                        break;
-                    }
-                }
-            }
-
-            final boolean invalidId = isBlank || duplicate;
+            final boolean isDuplicate = isIdDuplicate(titleText);
+            final boolean invalidId = !isIdValid(nameField);
 
             final Button confirmBtn = getButton(0);
             
@@ -278,19 +271,20 @@ public final class MarkerPresetDialog extends DialogPanel {
 
             if (isBlank) {
                 confirmBtn.tooltip.builder = (tp, isExpanded) -> tp.addPara("Name cannot be empty.", 0f);
-            } else if (duplicate) {
+            } else if (isDuplicate) {
                 confirmBtn.tooltip.builder = (tp, isExpanded) -> tp.addPara("Identical name already in use.", 0f);
             } else {
                 confirmBtn.tooltip.builder = null;
             }
             confirmBtn.setEnabled(!invalidId);
+            confirmBtn.setShowTooltipWhileInactive(true);
         }
 
         @Override
         public void dismiss(int option) {
             super.dismiss(option);
 
-            if (option == 0) {
+            if (option == 0 && isIdValid(nameField)) {
                 final String newName = nameField.getText().trim();
                 PresetConfig.map.remove(mWidget.mPreset.id);
                 mWidget.mPreset.id = newName;
@@ -299,6 +293,33 @@ public final class MarkerPresetDialog extends DialogPanel {
                 PresetConfigLoader.serializeAndWriteToCommon();
                 mWidget.buildUI();
             }
+        }
+
+        @Override
+        public void show(float durIn, float durOut) {
+            super.show(durIn, durOut);
+
+            nameField.grabFocus();
+        }
+
+        private final boolean isIdDuplicate(String input) {
+            final boolean isBlank = input.isEmpty();
+            boolean duplicate = false;
+            if (!isBlank) {
+                for (ItemMarkerPreset preset : PresetConfig.map.values()) {
+                    if (!preset.equals(mWidget.mPreset) && preset.id.equals(input)) {
+                        duplicate = true;
+                        break;
+                    }
+                }
+            }
+
+            return duplicate;
+        }
+
+        private final boolean isIdValid(TextFieldAPI field) {
+            final String input = field.getText().trim();
+            return !isIdDuplicate(input) && !input.isEmpty();
         }
     }
 
@@ -350,7 +371,7 @@ public final class MarkerPresetDialog extends DialogPanel {
 
     public final class ApplyButton extends Button {
         private static final SpriteAPI ICON = settings.getSprite("ui", "apply");
-        private static final Color ICON_COLOR = Color.WHITE;
+        private static final Color ICON_COLOR = base;
 
         public ApplyButton(PresetWidget widget) {
             super(BTN_H, BTN_H, "", null, (btn) -> {
@@ -364,6 +385,33 @@ public final class MarkerPresetDialog extends DialogPanel {
             bgDisabledAlpha = 0f;
 
             tooltip.builder = (tp, expanded) -> tp.addPara("Apply preset. %s the active one.", 0f, highlight, "Overrides");
+            tooltip.positioner = (tp, expanded) -> {
+                NativeUiUtils.anchorPanel(tp, this, AnchorType.LeftMid, opad*2);
+            };
+            setAlignment(Alignment.MID);
+
+            final SpriteElement icon = new SpriteElement(BTN_H, BTN_H, ICON, ICON_COLOR, null);
+            add(icon).inBL(0f, 0f);
+            glow.type = GlowType.ADDITIVE;
+            glow.additiveSprite = icon.getSprite();
+        }
+    }
+
+    public final class MergeButton extends Button {
+        private static final SpriteAPI ICON = settings.getSprite("ui", "merge");
+        private static final Color ICON_COLOR = base;
+
+        public MergeButton(PresetWidget widget) {
+            super(BTN_H, BTN_H, "", null, (btn) -> {
+                ItemMarkersMap.instance().activeMarkerIds.addAll(widget.mPreset.activeMarkerIds);
+                ItemMarkersMap.instance().rebuildMarkers();
+                mGrid.buildUI();
+            });
+
+            bgAlpha = 0f;
+            bgDisabledAlpha = 0f;
+
+            tooltip.builder = (tp, expanded) -> tp.addPara("Apply preset. %s the active one.", 0f, highlight, "Merges with");
             tooltip.positioner = (tp, expanded) -> {
                 NativeUiUtils.anchorPanel(tp, this, AnchorType.LeftMid, opad*2);
             };
