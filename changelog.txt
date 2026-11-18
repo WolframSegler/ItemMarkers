@@ -1,3 +1,8 @@
+Version 0.2.2
+- Added a second apply button that merges to the active markers set.
+- Fixed a bug causing identical names to be used for presets.
+- Fixed a bug where the hint tooltips for the rename dialog wouldn't work.
+
 Version 0.2.1
 - Added an option to update marker icon position each frame for mod compatibility.
 

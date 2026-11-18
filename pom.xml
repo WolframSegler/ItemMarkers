@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>wfg</groupId>
   <artifactId>item-markers</artifactId>
-  <version>0.1.3</version>
+  <version>0.2.2</version>
   <packaging>jar</packaging>
   <name>Item Markers</name>
 

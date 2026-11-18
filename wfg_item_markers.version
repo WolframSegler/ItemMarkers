@@ -5,7 +5,7 @@
 	"modVersion": {
 		"major":0,
 		"minor":2,
-		"patch":1
+		"patch":2
 	},
 	"starsectorVersion":"0.98.5a-RC7",
 	"directDownloadURL":"https://github.com/WolframSegler/ItemMarkers/releases/latest/download/ItemMarkers.zip",
