@@ -22,12 +22,12 @@ public final class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
 
     public MarkerGrid() {
         super(MarkerManagmentPanel.MAIN_PANEL_W, (int) (MarkerManagmentPanel.MAIN_PANEL_H * 0.67f),
-            VisualConfig.getWidgetW(), VisualConfig.getWidgetH(), opad
+            VisualConfig.getWidgetW(), VisualConfig.getWidgetH(), opad, opad
         );
 
-        mUniformOuterGap = true;
         mJustifyGrid = true;
         mIsSelectionEnabled = true;
+        mIsHighlightingEnabled = true;
         
         buildUI();
     }
@@ -56,7 +56,8 @@ public final class MarkerGrid extends GridTable<ItemMarker, MarkerWidget> {
         return widget;
     }
 
-    protected void onWidgetClicked(MarkerWidget source) {
+    protected void onWidgetClicked(MarkerWidget source, boolean isLeft, boolean isKeyboard) {
+        if (!isLeft && !isKeyboard) return;
         ItemMarkersMap.instance().toggleMarker(source.data);
         Global.getSoundPlayer().playUISound("ui_button_pressed", 1f, 1f);
     }
