@@ -78,8 +78,8 @@ public final class MarkerPresetDialog extends DialogPanel {
 
     private final class PresetList extends ListTable<ItemMarkerPreset, PresetWidget> {
         PresetList(float width, float height) {
-            super(width, height, WIDGET_H, opad);
-            mAddRowGap = true;
+            super(width, height, WIDGET_H, opad, opad);
+            mIsHighlightingEnabled = true;
             buildUI();
         }
 
@@ -91,8 +91,8 @@ public final class MarkerPresetDialog extends DialogPanel {
             return new PresetWidget(preset);
         }
 
-        protected void onWidgetClicked(PresetWidget source) {}
-        protected String getEmptyMessage() { return ""; }
+        protected void onWidgetClicked(PresetWidget source, boolean isLeft, boolean isKeyboard) {}
+        protected String getEmptyMessage() { return "No preset"; }
     }
 
     public final class CreatePresetButton extends Button {

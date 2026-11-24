@@ -1,3 +1,7 @@
+Version 0.2.3
+- Improved button injector to the intel tab.
+- Updated to support widget highlighting.
+
 Version 0.2.2
 - Added a second apply button that merges to the active markers set.
 - Fixed a bug causing identical names to be used for presets.

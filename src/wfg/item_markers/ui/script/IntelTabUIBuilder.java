@@ -1,7 +1,6 @@
 package wfg.item_markers.ui.script;
 
 import com.fs.starfarer.api.campaign.CoreUITabId;
-import com.fs.starfarer.api.ui.UIPanelAPI;
 import com.fs.starfarer.campaign.CampaignEngine;
 import com.fs.starfarer.campaign.comms.IntelTabData;
 
@@ -28,7 +27,7 @@ public final class IntelTabUIBuilder extends AbstractTabButtonInjector {
         return "Markers";
     }
 
-    protected UIElementAPI createCustomComponent(UIPanelAPI parent) {
+    protected UIElementAPI createContent() {
         return new MarkerManagmentPanel();
     }
 }
